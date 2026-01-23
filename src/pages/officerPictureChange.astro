@@ -88,10 +88,10 @@ import officersData from "../data/officers.json";
                           <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                         <div class="flex text-sm text-gray-600 justify-center">
-                          <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                          <span class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
                             <span>Upload a file</span>
                             <input id="file-upload" name="file-upload" type="file" class="sr-only" accept="image/*">
-                          </label>
+                          </span>
                         </div>
                         <p class="text-xs text-gray-500">PNG, JPG, GIF</p>
                       </div>
@@ -102,7 +102,7 @@ import officersData from "../data/officers.json";
                     <button type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                       Cancel
                     </button>
-                    <button type="button" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <button id="saveBtn" type="button" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
                       Save Changes
                     </button>
                 </div>
@@ -192,11 +192,13 @@ import officersData from "../data/officers.json";
         });
     });
 
-    // File input preview
+    // File input preview and state
+    let selectedFile: File | null = null;
     if (fileInput) {
         fileInput.addEventListener('change', (e) => {
             const file = (e.target as HTMLInputElement).files?.[0];
             if (file) {
+                selectedFile = file;
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     if (currentImage && noImagePlaceholder && e.target?.result) {
@@ -206,6 +208,92 @@ import officersData from "../data/officers.json";
                     }
                 };
                 reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // 4. Drop Zone Logic
+    const dropZone = document.getElementById('dropZone');
+    
+    // Make the entire drop zone clickable
+    if (dropZone && fileInput) {
+        dropZone.addEventListener('click', (e) => {
+             // Prevent recursive click if the actual file input was clicked (though it's hidden/sr-only)
+             // also if the label was clicked, let it handle natural behavior
+             // But since label contains input, and input is sr-only...
+             // Let's just catch clicks on the DIV that are NOT on the label/input to be safe.
+             // Or simpler: just trigger click() if e.target is the dropzone or a child not being the input.
+             
+             // The label handles itself. We only need to handle clicks on the whitespace.
+             // However, often it's easiest to just force click the input if it wasn't the target.
+             if (e.target !== fileInput) {
+                 fileInput.click();
+             }
+        });
+        
+        // Optional: Drag and drop visual feedback
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('border-blue-500', 'bg-blue-50');
+        });
+
+        dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+            
+            if (e.dataTransfer && e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                // Manually trigger change event since setting .files programmatically doesn't always do it
+                const event = new Event('change');
+                fileInput.dispatchEvent(event);
+            }
+        });
+    }
+
+    // 5. Save/Upload Logic
+    const saveBtn = document.getElementById('saveBtn') as HTMLButtonElement;
+    
+    if (saveBtn) {
+        saveBtn.addEventListener('click', async () => {
+            if (!selectedFile) {
+                alert('Please select an image first.');
+                return;
+            }
+
+            // UI Loading State
+            const originalText = saveBtn.textContent;
+            saveBtn.textContent = 'Uploading...';
+            saveBtn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('image', selectedFile);
+
+            try {
+                // Adjust this URL if your backend runs on a different port/host
+                const response = await fetch('http://localhost:3000/api/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    alert('Image uploaded successfully! URL: ' + result.data.url);
+                } else {
+                    alert('Upload failed: ' + (result.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error uploading:', error);
+                alert('An error occurred while uploading. Ensure backend is running.');
+            } finally {
+                // Reset UI
+                saveBtn.textContent = originalText;
+                saveBtn.disabled = false;
             }
         });
     }
