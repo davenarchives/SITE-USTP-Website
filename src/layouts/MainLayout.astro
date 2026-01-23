@@ -21,8 +21,24 @@ const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
 		<title>{title}</title>
+
+		<!-- Dark Mode Init Script -->
+		<script is:inline>
+			// Check localStorage and apply dark mode before page renders
+			if (
+				localStorage.getItem("theme") === "dark" ||
+				(!localStorage.getItem("theme") &&
+					window.matchMedia("(prefers-color-scheme: dark)").matches)
+			) {
+				document.documentElement.classList.add("dark");
+			} else {
+				document.documentElement.classList.remove("dark");
+			}
+		</script>
 	</head>
-	<body class="min-h-screen flex flex-col font-body bg-white">
+	<body
+		class="min-h-screen flex flex-col font-body bg-white dark:bg-[#0f172a] transition-colors duration-300"
+	>
 		<Header />
 		<main class="flex-grow">
 			<slot />

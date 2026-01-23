@@ -3,7 +3,7 @@ import siteLogo from "../assets/SITE-logo.png";
 ---
 
 <header
-    class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/80 border-b border-gray-200"
+    class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/80 dark:bg-[#132E54]/90 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300"
 >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
@@ -22,46 +22,109 @@ import siteLogo from "../assets/SITE-logo.png";
             <nav class="hidden md:flex space-x-8">
                 <a
                     href="/"
-                    class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                    class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors"
                     >Home</a
                 >
                 <a
                     href="/about"
-                    class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                    class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors"
                     >About</a
                 >
                 <a
                     href="/events"
-                    class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                    class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors"
                     >Events</a
                 >
                 <a
                     href="/resources"
-                    class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                    class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors"
                     >Resources</a
                 >
                 <a
                     href="/officers"
-                    class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                    class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors"
                     >Officers</a
                 >
                 <a
                     href="/blog"
-                    class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                    class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors"
                     >Blog</a
                 >
             </nav>
 
+            <!-- Right Side: Theme Toggle -->
+            <div class="hidden md:flex items-center gap-4">
+                <button
+                    id="theme-toggle"
+                    type="button"
+                    class="p-2 rounded-lg text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-cyan-400 transition-colors"
+                    aria-label="Toggle dark mode"
+                >
+                    <!-- Sun icon (shown in dark mode) -->
+                    <svg
+                        id="sun-icon"
+                        class="hidden w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                    >
+                        <path
+                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                    <!-- Moon icon (shown in light mode) -->
+                    <svg
+                        id="moon-icon"
+                        class="w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                    >
+                        <path
+                            d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+                        ></path>
+                    </svg>
+                </button>
+            </div>
+
             <!-- Mobile menu button -->
-            <div class="flex md:hidden">
+            <div class="flex md:hidden items-center gap-2">
+                <!-- Mobile Theme Toggle -->
+                <button
+                    id="theme-toggle-mobile"
+                    type="button"
+                    class="p-2 rounded-lg text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    aria-label="Toggle dark mode"
+                >
+                    <svg
+                        id="sun-icon-mobile"
+                        class="hidden w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                    >
+                        <path
+                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                    <svg
+                        id="moon-icon-mobile"
+                        class="w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                    >
+                        <path
+                            d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+                        ></path>
+                    </svg>
+                </button>
+
                 <button
                     type="button"
-                    class="text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 rounded-md p-2"
+                    class="text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 rounded-md p-2"
                     aria-controls="mobile-menu"
                     aria-expanded="false"
                 >
                     <span class="sr-only">Open main menu</span>
-                    <!-- Icon when menu is closed. -->
                     <svg
                         class="block h-6 w-6"
                         xmlns="http://www.w3.org/2000/svg"
@@ -76,7 +139,6 @@ import siteLogo from "../assets/SITE-logo.png";
                             stroke-width="2"
                             d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
-                    <!-- Icon when menu is open. -->
                     <svg
                         class="hidden h-6 w-6"
                         xmlns="http://www.w3.org/2000/svg"
@@ -98,35 +160,37 @@ import siteLogo from "../assets/SITE-logo.png";
 
     <!-- Mobile Menu -->
     <div class="hidden md:hidden" id="mobile-menu">
-        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white">
+        <div
+            class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-[#132E54]"
+        >
             <a
                 href="/"
-                class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium"
+                class="text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium"
                 >Home</a
             >
             <a
                 href="/about"
-                class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium"
+                class="text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium"
                 >About</a
             >
             <a
                 href="/events"
-                class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium"
+                class="text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium"
                 >Events</a
             >
             <a
                 href="/resources"
-                class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium"
+                class="text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium"
                 >Resources</a
             >
             <a
                 href="/officers"
-                class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium"
+                class="text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium"
                 >Officers</a
             >
             <a
                 href="/blog"
-                class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium"
+                class="text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium"
                 >Blog</a
             >
         </div>
@@ -134,7 +198,44 @@ import siteLogo from "../assets/SITE-logo.png";
 </header>
 
 <script is:inline>
-    // Mobile Menu Toggle Only
+    // Theme Toggle Logic
+    function updateIcons(isDark) {
+        const sunIcon = document.getElementById("sun-icon");
+        const moonIcon = document.getElementById("moon-icon");
+        const sunIconMobile = document.getElementById("sun-icon-mobile");
+        const moonIconMobile = document.getElementById("moon-icon-mobile");
+
+        if (isDark) {
+            sunIcon?.classList.remove("hidden");
+            moonIcon?.classList.add("hidden");
+            sunIconMobile?.classList.remove("hidden");
+            moonIconMobile?.classList.add("hidden");
+        } else {
+            sunIcon?.classList.add("hidden");
+            moonIcon?.classList.remove("hidden");
+            sunIconMobile?.classList.add("hidden");
+            moonIconMobile?.classList.remove("hidden");
+        }
+    }
+
+    function toggleTheme() {
+        const isDark = document.documentElement.classList.toggle("dark");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+        updateIcons(isDark);
+    }
+
+    // Initial icon state
+    updateIcons(document.documentElement.classList.contains("dark"));
+
+    // Event listeners
+    document
+        .getElementById("theme-toggle")
+        ?.addEventListener("click", toggleTheme);
+    document
+        .getElementById("theme-toggle-mobile")
+        ?.addEventListener("click", toggleTheme);
+
+    // Mobile Menu Toggle
     const btn = document.querySelector("button[aria-controls='mobile-menu']");
     const menu = document.getElementById("mobile-menu");
     const icons = btn?.querySelectorAll("svg");
