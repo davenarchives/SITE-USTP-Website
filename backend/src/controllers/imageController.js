@@ -21,6 +21,28 @@ const uploadImage = async (req, res) => {
             });
         }
 
+        // Update officerProfilePictures.json
+        const officerName = req.body.name;
+        if (officerName && officerName !== 'Unknown') {
+            const path = require('path');
+            // Path to: ../../../src/data/officerProfilePictures.json (relative to backend/src/controllers)
+            const jsonPath = path.resolve(__dirname, '../../../src/data/officerProfilePictures.json');
+
+            let data = {};
+            if (fs.existsSync(jsonPath)) {
+                try {
+                    const fileContent = fs.readFileSync(jsonPath, 'utf8');
+                    data = JSON.parse(fileContent);
+                } catch (e) {
+                    console.error("Error reading JSON:", e);
+                }
+            }
+
+            data[officerName] = result.secure_url;
+
+            fs.writeFileSync(jsonPath, JSON.stringify(data, null, 2));
+        }
+
         return res.status(200).json({
             success: true,
             message: 'Image uploaded successfully',

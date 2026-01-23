@@ -1,6 +1,7 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
 import officersData from "../data/officers.json";
+import officerProfilePictures from "../data/officerProfilePictures.json";
 ---
 
 <MainLayout title="Officer Picture Manager">
@@ -179,15 +180,24 @@ import officersData from "../data/officers.json";
 
             // Reset File Input & Preview
             if (fileInput) fileInput.value = '';
-            // For now, reset to placeholder since we don't have real images yet
-            if (currentImage) {
-                currentImage.src = '';
-                currentImage.classList.add('hidden');
-            }
-            if (noImagePlaceholder) {
-                noImagePlaceholder.classList.remove('hidden');
-                // Use first letter of position
-                if (pos) noImagePlaceholder.textContent = pos.charAt(0);
+            
+            // CHECK JSON DATA FOR EXISTING IMAGE
+            // We cast the imported JSON to any to avoid simple TS indexing errors in this context
+            const pictures = officerProfilePictures as Record<string, string>;
+            const existingImage = name ? pictures[name] : null;
+
+            if (currentImage && noImagePlaceholder) {
+                if (existingImage) {
+                    currentImage.src = existingImage;
+                    currentImage.classList.remove('hidden');
+                    noImagePlaceholder.classList.add('hidden');
+                } else {
+                    currentImage.src = '';
+                    currentImage.classList.add('hidden');
+                    noImagePlaceholder.classList.remove('hidden');
+                    // Use first letter of position
+                    if (pos) noImagePlaceholder.textContent = pos.charAt(0);
+                }
             }
         });
     });
@@ -272,6 +282,11 @@ import officersData from "../data/officers.json";
 
             const formData = new FormData();
             formData.append('image', selectedFile);
+            
+            // Get selected officer name (ensure UI has one selected)
+            const selectedNameElem = document.getElementById('selectedName');
+            const officerName = selectedNameElem ? selectedNameElem.textContent : 'Unknown';
+            formData.append('name', officerName || 'Unknown');
 
             try {
                 // Adjust this URL if your backend runs on a different port/host
