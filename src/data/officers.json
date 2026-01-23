@@ -1,0 +1,302 @@
+{
+    "academicYear": "2025-2026",
+    "departments": [
+        {
+            "name": "Executive Body",
+            "emoji": "⚪",
+            "color": "#FFFFFF",
+            "members": [
+                {
+                    "position": "President",
+                    "name": "John Michael Angelo C. Binonggo"
+                },
+                {
+                    "position": "General Secretary",
+                    "name": "Zamantha Shane Pacanut"
+                },
+                {
+                    "position": "Treasurer",
+                    "name": "Paul Charles P. Aleria"
+                },
+                {
+                    "position": "Auditor",
+                    "name": "Henna Pajo"
+                },
+                {
+                    "position": "Public Information Officer",
+                    "name": "Zinoel Buado"
+                },
+                {
+                    "position": "Public Relation Officer",
+                    "name": "Auvrey Gel Patindol Camance"
+                }
+            ]
+        },
+        {
+            "name": "Legislative Body",
+            "emoji": "🔵",
+            "color": "#1E90FF",
+            "members": [
+                {
+                    "position": "Legislative Secretary",
+                    "name": "Kyla G. Bulawin"
+                },
+                {
+                    "position": "4th Year Representative (Governor)",
+                    "name": "Tana Alexandra Lastimosa"
+                },
+                {
+                    "position": "3rd Year Representative (Governor)",
+                    "name": "John H. Dalisay"
+                },
+                {
+                    "position": "2nd Year Representative (Governor)",
+                    "name": "Kyla Sabines"
+                },
+                {
+                    "position": "1st Year Representative (Governor)",
+                    "name": "Kadellac Dotdot"
+                }
+            ]
+        },
+        {
+            "name": "Administrative Cabinet",
+            "emoji": "🟡",
+            "color": "#FFD700",
+            "members": [
+                {
+                    "position": "Vice-President External",
+                    "name": "Noel Omar Blanco"
+                },
+                {
+                    "position": "Administrative Secretary",
+                    "name": "Althea Vaughn G. Lagda"
+                }
+            ]
+        },
+        {
+            "name": "Department of External Affairs",
+            "emoji": "🛡️",
+            "color": "#4A90D9",
+            "members": [
+                {
+                    "position": "Department Head",
+                    "name": "Hannah Grace Tabuan"
+                },
+                {
+                    "position": "Associate Department Head",
+                    "name": "Keren Hapu Catondol"
+                },
+                {
+                    "position": "Department Secretary",
+                    "name": "Julia Biwang"
+                }
+            ]
+        },
+        {
+            "name": "Department of Liquidation and Finance",
+            "emoji": "💸",
+            "color": "#2ECC71",
+            "members": [
+                {
+                    "position": "Department Head",
+                    "name": "Kim Jasmine Jamora"
+                },
+                {
+                    "position": "Associate Department Head",
+                    "name": "Mary Justine E. Sta. Ana"
+                },
+                {
+                    "position": "Associate Department Head (Liquidation/Auditor)",
+                    "name": "Henna Pajo"
+                },
+                {
+                    "position": "Associate Department Head (Finance/Treasurer)",
+                    "name": "Paul Charles Aleria"
+                },
+                {
+                    "position": "Department Secretary",
+                    "name": "Alessandra Yuson"
+                },
+                {
+                    "position": "Committee",
+                    "name": "Kesha Sasi"
+                },
+                {
+                    "position": "Committee",
+                    "name": "Dieter Macayaran"
+                }
+            ]
+        },
+        {
+            "name": "Department of Creatives and Publication",
+            "emoji": "🎭",
+            "color": "#9B59B6",
+            "members": [
+                {
+                    "position": "Department Head",
+                    "name": "Lawrence Esclamado"
+                },
+                {
+                    "position": "Department Secretary",
+                    "name": "Ashley Franz Cago"
+                },
+                {
+                    "position": "Documentation Lead",
+                    "name": "Emman Alvarico"
+                },
+                {
+                    "position": "Documentation",
+                    "name": "Prinze Robinson"
+                },
+                {
+                    "position": "Documentation",
+                    "name": "Wendell Pardillo"
+                },
+                {
+                    "position": "Video Editor Lead",
+                    "name": "Avril Celesios"
+                },
+                {
+                    "position": "Graphic Design Lead",
+                    "name": "Jefferson Bernal Daculos"
+                },
+                {
+                    "position": "Writer",
+                    "name": "Maikent Lopez"
+                },
+                {
+                    "position": "Writer",
+                    "name": "Danica Joy Macapilit"
+                },
+                {
+                    "position": "Newscaster",
+                    "name": "Christopher Raterta Labis"
+                }
+            ]
+        },
+        {
+            "name": "Department of Leadership and Development",
+            "emoji": "⚖️",
+            "color": "#E67E22",
+            "members": [
+                {
+                    "position": "Department Head",
+                    "name": "Althea Gyl Planquero Campugan"
+                },
+                {
+                    "position": "Department Secretary",
+                    "name": "Shelly Marie S. Bulanon"
+                },
+                {
+                    "position": "Volunteer",
+                    "name": "Renhiel B. Maghanoy"
+                },
+                {
+                    "position": "Volunteer",
+                    "name": "Finnah Marie G. Bajas"
+                },
+                {
+                    "position": "Volunteer",
+                    "name": "Zyrile Joy C. Retuertas"
+                },
+                {
+                    "position": "Volunteer",
+                    "name": "Vonzelle Fiona A. Puray"
+                },
+                {
+                    "position": "Volunteer",
+                    "name": "Nikka Yhea C. Rodriguez"
+                }
+            ]
+        },
+        {
+            "name": "Department of Events and Production",
+            "emoji": "🎤",
+            "color": "#E74C3C",
+            "members": [
+                {
+                    "position": "Department Head",
+                    "name": "Iren Mercado Salazar"
+                },
+                {
+                    "position": "Associate Department Head",
+                    "name": "Derek Carlos Go Lituañas"
+                },
+                {
+                    "position": "Department Secretary",
+                    "name": "Chysney Ann Butron Gaid"
+                },
+                {
+                    "position": "Technical Lead",
+                    "name": "Mabi Akut"
+                },
+                {
+                    "position": "Technicals",
+                    "name": "Fathema Reina Navarro"
+                },
+                {
+                    "position": "Logistics Lead",
+                    "name": "Rechel Jean Tinaja"
+                },
+                {
+                    "position": "Floor Manager Lead",
+                    "name": "Xavier Bombeo"
+                },
+                {
+                    "position": "Usher Lead",
+                    "name": "Rhean Tapao"
+                }
+            ]
+        },
+        {
+            "name": "Department of Technology",
+            "emoji": "💻",
+            "color": "#3498DB",
+            "members": [
+                {
+                    "position": "Department Head",
+                    "name": "John Lemar Gonzales"
+                },
+                {
+                    "position": "Associate Department Head",
+                    "name": "Alexus Enzo C. Roa"
+                },
+                {
+                    "position": "Department Secretary",
+                    "name": "Chosen Grace S. Awiten"
+                },
+                {
+                    "position": "Front-end Developer",
+                    "name": "Daven Austhine Sumagang"
+                },
+                {
+                    "position": "Back-end Developer",
+                    "name": "James Christopher Tagupa"
+                }
+            ]
+        },
+        {
+            "name": "Department of Sports",
+            "emoji": "🏅",
+            "color": "#F39C12",
+            "members": [
+                {
+                    "position": "Department Head",
+                    "name": "Rich Lucky Calma"
+                }
+            ]
+        },
+        {
+            "name": "Electoral Commission",
+            "emoji": "⚫",
+            "color": "#2C3E50",
+            "members": [
+                {
+                    "position": "Moderator",
+                    "name": "Engr. Jay Noel N. Rojo"
+                }
+            ]
+        }
+    ]
+}

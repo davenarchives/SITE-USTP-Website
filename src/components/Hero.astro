@@ -4,11 +4,19 @@ import bgTemplate from "../assets/bg-template.jpg";
 ---
 
 <section
-    class="relative min-h-screen flex flex-col justify-center bg-cover bg-center bg-no-repeat"
-    style={`background-image: url(${bgTemplate.src});`}
+    class="relative min-h-screen flex flex-col justify-center overflow-hidden"
 >
+    <!-- Background Image -->
+    <Image
+        src={bgTemplate}
+        alt="SITE USTP Background"
+        class="absolute inset-0 w-full h-full object-cover z-0"
+        loading="eager"
+        quality={85}
+    />
+
     <!-- Darker Overlay for readability -->
-    <div class="absolute inset-0 bg-black/40 z-0"></div>
+    <div class="absolute inset-0 bg-black/40 z-[1]"></div>
 
     <!-- Hero Content -->
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">

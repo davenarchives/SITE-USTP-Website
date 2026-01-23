@@ -1,39 +1,69 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
-import OfficerCard from "../components/OfficerCard.astro";
-import { getCollection } from "astro:content";
+import officersData from "../data/officers.json";
 
-const officers = await getCollection("officers");
+const { academicYear, departments } = officersData;
 ---
 
 <MainLayout title="Our Team | SITE">
-    <div class="bg-white py-16">
+    <div class="bg-gray-50 min-h-screen py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h1 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+            <!-- Header -->
+            <div class="text-center mb-16">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">
                     Meet the Team
                 </h1>
-                <p class="mt-4 text-xl text-gray-500">
-                    The dedicated students behind SITE.
+                <p class="text-xl text-slate-600">
+                    The dedicated students behind SITE
                 </p>
+                <div class="mt-4 inline-flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-full px-4 py-2">
+                    <span class="text-blue-700 font-semibold">Academic Year {academicYear}</span>
+                </div>
             </div>
 
-            {
-                officers.length > 0 ? (
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {officers.map((officer) => (
-                            <OfficerCard officer={officer} />
-                        ))}
-                    </div>
-                ) : (
-                    <div class="text-center py-20">
-                        <p class="text-gray-500 text-lg">
-                            Officer data is currently being updated. Please
-                            check back later.
-                        </p>
-                    </div>
-                )
-            }
+            <!-- Departments -->
+            <div class="space-y-16">
+                {departments.map((department) => (
+                    <section>
+                        <!-- Department Header -->
+                        <div class="flex items-center gap-3 mb-8">
+                            <span class="text-3xl">{department.emoji}</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-slate-900">
+                                {department.name}
+                            </h2>
+                            <div class="flex-1 h-px bg-gradient-to-r from-slate-200 to-transparent ml-4"></div>
+                        </div>
+
+                        <!-- Officers Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            {department.members.map((member) => (
+                                <div class="group bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-blue-300 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300">
+                                    <!-- Placeholder Image -->
+                                    <div class="h-48 w-full bg-slate-100 relative overflow-hidden">
+                                        <div class="flex items-center justify-center h-full text-slate-300 group-hover:text-slate-400 transition-colors">
+                                            <svg class="h-20 w-20" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                                            </svg>
+                                        </div>
+                                        <!-- Hover Overlay -->
+                                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                    </div>
+                                    
+                                    <!-- Officer Info -->
+                                    <div class="p-5">
+                                        <h3 class="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                                            {member.name}
+                                        </h3>
+                                        <p class="text-sm font-medium text-blue-600 mt-1">
+                                            {member.position}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                ))}
+            </div>
         </div>
     </div>
 </MainLayout>
