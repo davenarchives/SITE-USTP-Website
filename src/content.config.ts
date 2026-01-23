@@ -1,33 +1,18 @@
 import { defineCollection, z } from 'astro:content';
 
 const blog = defineCollection({
-	type: 'content',
-	// Type-check frontmatter using a schema
-	schema: z.object({
-		title: z.string(),
-		description: z.string(),
-		// Transform string to Date object
-		pubDate: z.coerce.date(),
-		updatedDate: z.coerce.date().optional(),
-		heroImage: z.string().optional(),
+    type: 'content',
+    // Type-check frontmatter using a schema
+    schema: z.object({
+        title: z.string(),
+        description: z.string(),
+        // Transform string to Date object
+        pubDate: z.coerce.date(),
+        updatedDate: z.coerce.date().optional(),
+        heroImage: z.string().optional(),
         author: z.string().default('SITE Officer'),
         tags: z.array(z.string()).default([]),
-	}),
-});
-
-const officers = defineCollection({
-    type: 'data',
-    schema: z.object({
-        name: z.string(),
-        position: z.string(),
-        image: z.string(),
-        socials: z.object({
-            github: z.string().optional(),
-            linkedin: z.string().optional(),
-            email: z.string().optional(),
-        }).optional(),
-        bio: z.string().optional(),
-    })
+    }),
 });
 
 const transparency = defineCollection({
@@ -51,4 +36,4 @@ const resources = defineCollection({
     })
 });
 
-export const collections = { blog, officers, transparency, resources };
+export const collections = { blog, transparency, resources };
