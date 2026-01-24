@@ -8,17 +8,17 @@ const uploadImage = async (req, res) => {
         }
 
         // Upload to Cloudinary
-        const result = await cloudinary.uploader.upload(req.file.path, {
-            folder: 'officer_pictures', // Optional: Organize in a specific folder
-        });
-
-        // Clean up local file (since multer saves it temporarily)
-        // If using memory storage, this isn't needed, but disk storage is common.
-        // We'll assume disk storage for now or handle cleanup gracefully.
-        if (req.file.path) {
-            fs.unlink(req.file.path, (err) => {
-                if (err) console.error("Failed to delete local file:", err);
+        let result;
+        try {
+            result = await cloudinary.uploader.upload(req.file.path, {
+                folder: 'officer_pictures', // Optional: Organize in a specific folder
             });
+        } catch (cloudinaryError) {
+            console.error('Cloudinary Upload Error:', cloudinaryError);
+            if (!process.env.CLOUDINARY_API_KEY || process.env.CLOUDINARY_API_KEY.includes('your_api_key')) {
+                throw new Error('Missing or invalid Cloudinary credentials in backend/.env');
+            }
+            throw cloudinaryError;
         }
 
         // Update officerProfilePictures.json
@@ -40,7 +40,13 @@ const uploadImage = async (req, res) => {
 
             data[officerName] = result.secure_url;
 
-            fs.writeFileSync(jsonPath, JSON.stringify(data, null, 2));
+            try {
+                fs.writeFileSync(jsonPath, JSON.stringify(data, null, 2));
+            } catch (writeError) {
+                console.error("Failed to update JSON file:", writeError);
+                // We don't fail the request here, as the image was uploaded successfully? 
+                // Alternatively, we could, but let's just log it for now.
+            }
         }
 
         return res.status(200).json({
@@ -53,8 +59,15 @@ const uploadImage = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Upload Error:', error);
+        console.error('Upload Process Error:', error.message);
         return res.status(500).json({ success: false, message: 'Server error during upload', error: error.message });
+    } finally {
+        // Clean up local file (always runs)
+        if (req.file && req.file.path) {
+            fs.unlink(req.file.path, (err) => {
+                if (err && err.code !== 'ENOENT') console.error("Failed to delete local file:", err);
+            });
+        }
     }
 };
 
