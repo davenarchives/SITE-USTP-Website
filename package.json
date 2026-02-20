@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "tinacms dev -c \"astro dev\"",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
@@ -15,11 +15,13 @@
     "@astrojs/sitemap": "^3.7.0",
     "@astrojs/vercel": "^8.0.4",
     "@tailwindcss/vite": "^4.1.18",
+    "@tinacms/cli": "^2.1.6",
     "astro": "^5.16.15",
     "cloudinary": "^2.9.0",
     "firebase": "^12.8.0",
     "sharp": "^0.34.3",
     "tailwindcss": "^4.1.18",
+    "tinacms": "^3.5.0",
     "typescript": "^5.9.3"
   },
   "devDependencies": {

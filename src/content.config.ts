@@ -36,4 +36,17 @@ const resources = defineCollection({
     })
 });
 
-export const collections = { blog, transparency, resources };
+const events = defineCollection({
+    type: 'content',
+    schema: z.object({
+        title: z.string(),
+        date: z.coerce.date(),
+        endDate: z.coerce.date().optional(),
+        time: z.string().optional(),
+        location: z.string(),
+        description: z.string(),
+        registrationLink: z.string().optional(),
+    })
+});
+
+export const collections = { blog, transparency, resources, events };
