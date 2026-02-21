@@ -104,7 +104,7 @@ The application uses **Astro** in **SSR (Server)** mode, hosted on **Vercel**.
     CLOUDINARY_API_SECRET=your_secret
 
     # Admin
-    PUBLIC_ADMIN_EMAILS=admin@ustp.edu.ph,president@site.org
+    ADMIN_EMAILS=admin@ustp.edu.ph,president@site.org
     ```
 
 4.  **Run Development Server**

@@ -4,7 +4,7 @@ This release introduces the Admin Portal for officer management, migrates storag
 
 ### 🔐 Authentication
 *   **Firebase OAuth Integration**: Implemented Google Sign-In using Firebase Authentication (`src/pages/admin.astro`).
-*   **Role-Based Access Control**: Restricted access to the Admin Portal to specific email addresses defined in `PUBLIC_ADMIN_EMAILS`.
+*   **Role-Based Access Control**: Restricted access to the Admin Portal to specific email addresses defined in `ADMIN_EMAILS`.
 *   **Session Management**: Added client-side session checks to protect the `/officerPictureChange` route.
 
 ### 📸 Officer Picture Manager
@@ -25,6 +25,6 @@ This release introduces the Admin Portal for officer management, migrates storag
 
 ### ⚠️ Important for Deployment
 *   **Environment Variables**: The following variables must be set in the Vercel project settings:
-    *   `PUBLIC_ADMIN_EMAILS`
+    *   `ADMIN_EMAILS`
     *   `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
     *   `PUBLIC_FIREBASE_API_KEY`, `PUBLIC_FIREBASE_AUTH_DOMAIN`, etc.
