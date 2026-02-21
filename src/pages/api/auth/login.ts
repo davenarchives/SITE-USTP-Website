@@ -12,7 +12,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
             });
         }
 
-        const adminEmailsEnv = import.meta.env.ADMIN_EMAILS || "";
+        const adminEmailsEnv = import.meta.env.PUBLIC_ADMIN_EMAILS || import.meta.env.ADMIN_EMAILS || "";
         const authorizedEmails = adminEmailsEnv.split(",").map((e: string) => e.trim());
 
         if (authorizedEmails.includes(email)) {
