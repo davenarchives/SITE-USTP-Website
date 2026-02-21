@@ -10,6 +10,7 @@ interface Props {
 }
 
 const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
+const isHome = Astro.url.pathname === "/" || Astro.url.pathname === "";
 ---
 
 <!doctype html>
@@ -24,7 +25,7 @@ const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
 	</head>
 	<body class="min-h-screen flex flex-col font-body bg-white">
 		<Header />
-		<main class="flex-grow">
+		<main class={`flex-grow ${isHome ? "" : "pt-16"}`}>
 			<slot />
 		</main>
 		<Footer />

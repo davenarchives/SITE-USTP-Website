@@ -105,6 +105,11 @@ The application uses **Astro** in **SSR (Server)** mode, hosted on **Vercel**.
 
     # Admin
     ADMIN_EMAILS=admin@ustp.edu.ph,president@site.org
+
+    # TinaCMS (Content Manager)
+    PUBLIC_TINA_CLIENT_ID=your_tina_client_id
+    TINA_TOKEN=your_tina_token
+    TINA_SEARCH_TOKEN=your_tina_search_token
     ```
 
 4.  **Run Development Server**

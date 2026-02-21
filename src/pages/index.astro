@@ -2,6 +2,7 @@
 import MainLayout from "../layouts/MainLayout.astro";
 import Hero from "../components/Hero.astro";
 import SDGCard from "../components/SDGCard.astro";
+import ResourceGrid from "../components/ResourceGrid.astro";
 import { getCollection } from "astro:content";
 import FormattedDate from "../components/FormattedDate.astro";
 
@@ -18,6 +19,10 @@ posts.sort(
         new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf(),
 );
 const recentNews = posts.slice(0, 3);
+
+// Fetch resources
+const allResources = await getCollection("resources");
+const recentResources = allResources.slice(0, 3);
 
 const formatDateNumber = (date: Date | string) => {
     return new Date(date).getDate().toString();
@@ -115,7 +120,7 @@ const formatMonthName = (date: Date | string) => {
                                     <h4 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
                                         {event.data.title}
                                     </h4>
-                                    <div class="flex items-center text-xs text-gray-500 mb-3">
+                                    <div class="flex items-center text-xs text-gray-500 mb-4 flex-1">
                                         <svg
                                             class="h-3 w-3 mr-1"
                                             fill="currentColor"
@@ -131,9 +136,6 @@ const formatMonthName = (date: Date | string) => {
                                             {event.data.location}
                                         </span>
                                     </div>
-                                    <p class="text-sm text-gray-600 line-clamp-3 mb-4 flex-1">
-                                        {event.data.description}
-                                    </p>
                                     <div class="mt-auto">
                                         <a
                                             href="/events"
@@ -158,7 +160,7 @@ const formatMonthName = (date: Date | string) => {
                         News
                     </h3>
                     <a
-                        href="/blog"
+                        href="/news"
                         class="text-blue-600 hover:text-blue-800 font-medium"
                         >View all news &rarr;</a
                     >
@@ -207,7 +209,7 @@ const formatMonthName = (date: Date | string) => {
                                     </p>
                                     <div class="mt-auto">
                                         <a
-                                            href={`/blog/${post.slug}`}
+                                            href={`/news/${post.slug}`}
                                             class="text-sm text-blue-600 font-semibold hover:underline"
                                         >
                                             Read article &rarr;
@@ -219,6 +221,84 @@ const formatMonthName = (date: Date | string) => {
                     }
                 </div>
             </div>
+
+            <!-- Resources Row -->
+            <div class="mt-16">
+                <div class="flex justify-between items-end mb-8">
+                    <h3
+                        class="text-2xl font-bold text-gray-900 border-b-2 border-blue-600 pb-2 inline-block"
+                    >
+                        Resources
+                    </h3>
+                    <a
+                        href="/resources"
+                        class="text-blue-600 hover:text-blue-800 font-medium"
+                        >View all resources &rarr;</a
+                    >
+                </div>
+
+                {
+                    /* Horizontal scrollable container for the 'carousel' effect on smaller screens */
+                }
+                <div
+                    class="flex overflow-x-auto pb-4 gap-6 snap-x snap-mandatory hide-scrollbars md:grid md:grid-cols-3 md:overflow-visible md:-mx-0 -mx-4 px-4 md:px-0"
+                >
+                    {
+                        recentResources.map((resource) => (
+                            <div class="flex-none w-full sm:w-[calc(50%-12px)] md:w-auto snap-center">
+                                <div class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-6 flex flex-col h-full">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <span
+                                            class={`px-2 py-1 text-xs font-semibold rounded-full 
+                                            ${
+                                                resource.data.category ===
+                                                "Academic"
+                                                    ? "bg-blue-100 text-blue-800"
+                                                    : resource.data.category ===
+                                                        "Software"
+                                                      ? "bg-green-100 text-green-800"
+                                                      : "bg-gray-100 text-gray-800"
+                                            }`}
+                                        >
+                                            {resource.data.category}
+                                        </span>
+                                    </div>
+
+                                    <h3
+                                        class="text-lg font-medium text-gray-900 mb-2 truncate"
+                                        title={resource.data.title}
+                                    >
+                                        {resource.data.title}
+                                    </h3>
+
+                                    <p class="text-sm text-gray-500 mb-4 flex-grow line-clamp-3">
+                                        {resource.data.description}
+                                    </p>
+
+                                    <a
+                                        href={resource.data.link}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="mt-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors w-full"
+                                    >
+                                        Download / View
+                                    </a>
+                                </div>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
         </div>
     </section>
+
+    <style>
+        .hide-scrollbars::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbars {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
 </MainLayout>

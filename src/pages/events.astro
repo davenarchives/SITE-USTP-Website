@@ -1,5 +1,6 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
+import EventCalendar from "../components/EventCalendar.astro";
 import { getCollection } from "astro:content";
 
 const events = await getCollection("events");
@@ -28,18 +29,8 @@ const formatMonthName = (date: Date | string) => {
                 </p>
             </div>
 
-            <!-- Event Calendar Embed (Google Calendar Placeholder) -->
-            <div
-                class="bg-gray-50 rounded-xl shadow p-4 border border-gray-200 mb-12"
-            >
-                <div
-                    class="aspect-w-16 aspect-h-9 flex items-center justify-center h-96"
-                >
-                    <p class="text-gray-500">
-                        Google Calendar Embed will go here.
-                    </p>
-                </div>
-            </div>
+            <!-- Event Calendar Embed -->
+            <EventCalendar />
 
             <!-- Featured Upcoming Events List -->
             <div class="space-y-8">
@@ -89,9 +80,6 @@ const formatMonthName = (date: Date | string) => {
                                 <h2 class="text-2xl font-bold text-gray-900 mb-2">
                                     {event.data.title}
                                 </h2>
-                                <p class="text-gray-600 mb-4">
-                                    {event.data.description}
-                                </p>
                                 {event.data.registrationLink && (
                                     <a
                                         href={event.data.registrationLink}

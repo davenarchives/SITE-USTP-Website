@@ -27,3 +27,7 @@ pnpm-debug.log*
 .vercel/
 # tina
 tina/__generated__/
+
+# Custom ignores
+*.log
+git_status_out.txt

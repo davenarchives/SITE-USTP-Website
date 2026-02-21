@@ -3,7 +3,7 @@ import siteLogo from "../assets/SITE-logo.png";
 ---
 
 <header
-    class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/80 border-b border-gray-200"
+    class="fixed top-0 z-50 w-full backdrop-blur-md bg-white/80 border-b border-gray-200"
 >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
@@ -21,19 +21,14 @@ import siteLogo from "../assets/SITE-logo.png";
             <!-- Desktop Nav -->
             <nav class="hidden md:flex space-x-8">
                 <a
-                    href="/"
-                    class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
-                    >Home</a
-                >
-                <a
-                    href="/about"
-                    class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
-                    >About</a
-                >
-                <a
                     href="/events"
                     class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
                     >Events</a
+                >
+                <a
+                    href="/news"
+                    class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                    >News</a
                 >
                 <a
                     href="/resources"
@@ -45,18 +40,13 @@ import siteLogo from "../assets/SITE-logo.png";
                     class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
                     >Officers</a
                 >
-                <a
-                    href="/blog"
-                    class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
-                    >Blog</a
-                >
             </nav>
 
             <!-- Mobile menu button -->
             <div class="flex md:hidden">
                 <button
                     type="button"
-                    class="text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 rounded-md p-2"
+                    class="mobile-menu-btn text-gray-500 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 rounded-md p-2"
                     aria-controls="mobile-menu"
                     aria-expanded="false"
                 >
@@ -98,21 +88,18 @@ import siteLogo from "../assets/SITE-logo.png";
 
     <!-- Mobile Menu -->
     <div class="hidden md:hidden" id="mobile-menu">
-        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white">
-            <a
-                href="/"
-                class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium"
-                >Home</a
-            >
-            <a
-                href="/about"
-                class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium"
-                >About</a
-            >
+        <div
+            class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-100 shadow-lg"
+        >
             <a
                 href="/events"
                 class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium"
                 >Events</a
+            >
+            <a
+                href="/news"
+                class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium"
+                >News</a
             >
             <a
                 href="/resources"
@@ -124,18 +111,13 @@ import siteLogo from "../assets/SITE-logo.png";
                 class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium"
                 >Officers</a
             >
-            <a
-                href="/blog"
-                class="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium"
-                >Blog</a
-            >
         </div>
     </div>
 </header>
 
 <script is:inline>
-    // Mobile Menu Toggle Only
-    const btn = document.querySelector("button[aria-controls='mobile-menu']");
+    // Mobile Menu Toggle
+    const btn = document.querySelector(".mobile-menu-btn");
     const menu = document.getElementById("mobile-menu");
     const icons = btn?.querySelectorAll("svg");
 

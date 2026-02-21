@@ -9,16 +9,16 @@ const posts = (await getCollection("blog")).sort(
 );
 ---
 
-<MainLayout title="Blog & Devlog | SITE">
+<MainLayout title="News | SITE">
     <div class="bg-white py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h1 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-                    SITE Devlog
+                    SITE News
                 </h1>
                 <p class="mt-4 text-xl text-gray-500">
-                    Technical tutorials, project updates, and stories from the
-                    BSIT community.
+                    Latest updates, announcements, and stories from the SITE
+                    community.
                 </p>
             </div>
 
@@ -47,7 +47,7 @@ const posts = (await getCollection("blog")).sort(
                                         {post.data.tags && post.data.tags[0]}
                                     </p>
                                     <a
-                                        href={`/blog/${post.slug}/`}
+                                        href={`/news/${post.slug}/`}
                                         class="block mt-2"
                                     >
                                         <p class="text-xl font-semibold text-gray-900">
