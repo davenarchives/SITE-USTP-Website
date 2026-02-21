@@ -17,17 +17,7 @@ export default defineConfig({
             publicFolder: "public",
         },
     },
-    // Only enable search if the token is provided
-    ...(process.env.TINA_SEARCH_TOKEN ? {
-        search: {
-            tina: {
-                indexerToken: process.env.TINA_SEARCH_TOKEN,
-                stopwordLanguages: ['eng'],
-            },
-            indexBatchSize: 100,
-            maxSearchIndexFieldLength: 100,
-        },
-    } : {}),
+
     schema: {
         collections: [
             {
