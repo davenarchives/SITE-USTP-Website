@@ -1,0 +1,571 @@
+
+---
+import officersData from "../data/officers.json";
+
+// Shared logic handles auth state, but this component assumes it's rendered
+// only when authorized.
+---
+
+<div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">
+                    Officer Picture Manager
+                </h1>
+                <p class="mt-2 text-sm text-gray-600">
+                    Select an officer to update their profile picture.
+                </p>
+            </div>
+            <button
+                id="logoutBtn"
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            >
+                Logout
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Sidebar / List of Officers -->
+            <div
+                class="bg-white rounded-lg shadow overflow-hidden flex flex-col h-[600px]"
+            >
+                <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        Officers ({officersData.academicYear})
+                    </h3>
+                </div>
+                <!-- Search Input -->
+                <div class="px-4 py-2 bg-gray-50 border-b border-gray-200">
+                    <input
+                        type="text"
+                        id="searchOfficerInput"
+                        placeholder="Search officer name..."
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                </div>
+                <div class="overflow-y-auto flex-1 p-2 space-y-4" id="officersListContainer">
+                    {
+                        officersData.departments.map((dept) => (
+                            <div class="mb-6">
+                                <div
+                                    class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm px-4 py-3 text-sm font-bold text-gray-800 uppercase tracking-wide border-l-4 shadow-sm"
+                                    style={`border-color: ${dept.color}`}
+                                >
+                                    <span class="mr-2">{dept.emoji}</span>
+                                    {dept.name}
+                                </div>
+                                <ul class="space-y-1">
+                                    {dept.members.map((member) => (
+                                        <li
+                                            class="officer-item hover:bg-blue-50 cursor-pointer p-3 rounded-md transition duration-150 ease-in-out border-l-4 border-transparent flex items-center space-x-3 group"
+                                            data-name={member.name}
+                                            data-position={member.position}
+                                            data-dept={dept.name}
+                                            data-image=""
+                                        >
+                                            <div class="flex-shrink-0">
+                                                <!-- Image will be populated by client script -->
+                                                    <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold group-hover:bg-blue-200 group-hover:text-blue-700 transition-colors">
+                                                        {member.position.charAt(
+                                                            0,
+                                                        )}
+                                                    </div>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-sm font-medium text-gray-900 truncate">
+                                                    {member.position}
+                                                </p>
+                                                <p class="text-xs text-gray-500 truncate">
+                                                    {member.name}
+                                                </p>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+
+            <!-- Main Content / Edit Area -->
+            <div class="md:col-span-2 space-y-6">
+                <div
+                    class="bg-white rounded-lg shadow px-4 py-5 sm:p-6 hidden"
+                    id="editArea"
+                >
+                    <div class="border-b border-gray-200 pb-4 mb-4">
+                        <h2
+                            class="text-xl font-bold text-gray-900"
+                            id="selectedPosition"
+                        >
+                            Position Name
+                        </h2>
+                        <p class="text-sm text-gray-500" id="selectedName">
+                            Officer Name
+                        </p>
+                        <p
+                            class="text-xs text-blue-600 mt-1"
+                            id="selectedDept"
+                        >
+                            Department
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col items-center space-y-6">
+                        <!-- Current Image Preview -->
+                        <div class="relative group">
+                            <div
+                                class="h-48 w-48 rounded-full overflow-hidden border-4 border-gray-100 shadow-sm bg-gray-100 flex items-center justify-center"
+                            >
+                                <img
+                                    id="currentImage"
+                                    src=""
+                                    alt="Current Officer"
+                                    class="h-full w-full object-cover hidden"
+                                />
+                                <span
+                                    id="noImagePlaceholder"
+                                    class="text-gray-400 text-5xl font-bold"
+                                    >?</span
+                                >
+                            </div>
+                        </div>
+
+                        <div class="w-full max-w-sm">
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-2"
+                                >Upload New Image</label
+                            >
+                            <div
+                                class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-blue-500 transition-colors cursor-pointer group"
+                                id="dropZone"
+                            >
+                                <div class="space-y-1 text-center">
+                                    <svg
+                                        class="mx-auto h-12 w-12 text-gray-400 group-hover:text-blue-500 transition-colors"
+                                        stroke="currentColor"
+                                        fill="none"
+                                        viewBox="0 0 48 48"
+                                        aria-hidden="true"
+                                    >
+                                        <path
+                                            d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"></path>
+                                    </svg>
+                                    <div
+                                        class="flex text-sm text-gray-600 justify-center"
+                                        >
+                                        <span
+                                            class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
+                                        >
+                                            <span>Upload a file</span>
+                                            <input
+                                                id="file-upload"
+                                                name="file-upload"
+                                                type="file"
+                                                class="sr-only"
+                                                accept="image/*"
+                                            />
+                                        </span>
+                                    </div>
+                                    <p class="text-xs text-gray-500">
+                                        PNG, JPG, GIF
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="flex space-x-3 w-full max-w-sm justify-end"
+                        >
+                            <button
+                                id="saveBtn"
+                                type="button"
+                                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    id="emptyState"
+                    class="bg-white rounded-lg shadow px-4 py-12 flex flex-col items-center justify-center text-center h-full max-h-[400px]"
+                >
+                    <svg
+                        class="h-16 w-16 text-gray-300 mb-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                        ></path>
+                    </svg>
+                    <h3 class="text-lg font-medium text-gray-900">
+                        No Officer Selected
+                    </h3>
+                    <p class="mt-1 text-sm text-gray-500">
+                        Select an officer from the list to manage their
+                        profile picture.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    import { auth, db } from "../lib/firebase";
+    import { doc, getDoc, setDoc } from "firebase/firestore";
+    import { onAuthStateChanged, signOut } from "firebase/auth";
+
+    // 1. Auth Check with Firebase Listener
+    // Note: Server has already validated the cookie.
+    // If Firebase Auth (client) is missing/expired but Cookie (server) exists,
+    // we must clear the cookie to stop the Infinite Reload Loop.
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+            console.warn("Client-side auth missing. Clearing server session...");
+            // Clear server cookie so we don't render this component again
+            await fetch("/api/auth/logout", { method: "POST" });
+            window.location.href = "/admin";
+            return;
+        }
+
+        const isAdmin = localStorage.getItem("isAdmin");
+        if (!isAdmin) {
+            await signOut(auth);
+            await fetch("/api/auth/logout", { method: "POST" });
+            window.location.href = "/admin";
+        }
+    });
+
+    // 2. Logout Logic
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", async () => {
+            await signOut(auth);
+            localStorage.removeItem("isAdmin");
+            localStorage.removeItem("adminEmail");
+            
+            // Call server to clear HTTP-only cookie
+            await fetch("/api/auth/logout", { method: "POST" });
+            
+            window.location.href = "/admin";
+        });
+    }
+
+    // 2.5 Search Logic
+    const searchInput = document.getElementById("searchOfficerInput");
+    if (searchInput) {
+        searchInput.addEventListener("input", (e) => {
+            const searchTerm = (e.target as HTMLInputElement).value
+                .toLowerCase()
+                .trim();
+            const officerItems = document.querySelectorAll(".officer-item");
+
+            officerItems.forEach((item) => {
+                const name = item.getAttribute("data-name")?.toLowerCase() || "";
+                
+                // Show/Hide Items
+                if (name.includes(searchTerm)) {
+                    item.classList.remove("hidden");
+                    item.classList.add("flex"); // Ensure flex display when visible
+                } else {
+                    item.classList.add("hidden");
+                    item.classList.remove("flex");
+                }
+            });
+
+            // Optional: Hide empty departments
+            const departments = document.querySelectorAll("#officersListContainer > div");
+            departments.forEach(dept => {
+                const visibleItems = dept.querySelectorAll(".officer-item:not(.hidden)");
+                if (visibleItems.length === 0) {
+                     dept.classList.add("hidden");
+                } else {
+                     dept.classList.remove("hidden");
+                }
+            });
+        });
+    }
+
+    // Load initial data from Firestore
+    let firestoreImages: Record<string, string> = {};
+    const docRef = doc(db, "settings", "officerProfilePictures");
+
+    // Fetch current images
+    try {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            firestoreImages = docSnap.data();
+            updateUIWithImages(firestoreImages);
+        } else {
+            console.log("No such document!");
+        }
+    } catch (e) {
+        console.error("Error getting document:", e);
+    }
+
+    function updateUIWithImages(images: any) {
+        const officerItems = document.querySelectorAll(".officer-item");
+        officerItems.forEach((item) => {
+            const name = item.getAttribute("data-name");
+            const imgContainer = item.querySelector(".flex-shrink-0");
+
+            if (name && images[name]) {
+                item.setAttribute("data-image", images[name]);
+                if (imgContainer) {
+                    imgContainer.innerHTML = `
+                         <img
+                            src="${images[name]}"
+                            alt="${name}"
+                            class="h-10 w-10 rounded-full object-cover border border-gray-200 group-hover:border-blue-300"
+                        />
+                    `;
+                }
+            }
+        });
+    }
+
+    // 3. UI Logic
+    const officerItems = document.querySelectorAll(".officer-item");
+    const editArea = document.getElementById("editArea");
+    const emptyState = document.getElementById("emptyState");
+
+    // Preview Elements
+    const selectedPosition = document.getElementById("selectedPosition");
+    const selectedName = document.getElementById("selectedName");
+    const selectedDept = document.getElementById("selectedDept");
+    const noImagePlaceholder = document.getElementById("noImagePlaceholder");
+    const currentImage = document.getElementById(
+        "currentImage",
+    ) as HTMLImageElement;
+    const fileInput = document.getElementById(
+        "file-upload",
+    ) as HTMLInputElement;
+
+    officerItems.forEach((item) => {
+        item.addEventListener("click", () => {
+            // Visual selection
+            officerItems.forEach((li) => {
+                li.classList.remove("border-blue-500", "bg-blue-50");
+                li.classList.add("border-transparent");
+            });
+            item.classList.remove("border-transparent");
+            item.classList.add("border-blue-500", "bg-blue-50");
+
+            // Show edit area
+            if (editArea && emptyState) {
+                editArea.classList.remove("hidden");
+                emptyState.classList.add("hidden");
+            }
+
+            // Update Header
+            const name = item.getAttribute("data-name");
+            const pos = item.getAttribute("data-position");
+            const dept = item.getAttribute("data-dept");
+
+            if (selectedPosition)
+                selectedPosition.textContent = pos || "Unknown Position";
+            if (selectedName) selectedName.textContent = name || "Unknown Name";
+            if (selectedDept) selectedDept.textContent = dept || "Unknown Dept";
+
+            // Reset File Input & Preview
+            if (fileInput) fileInput.value = "";
+
+            // Get existing image from data attribute (which we updated from Firestore)
+            const existingImage = item.getAttribute("data-image");
+
+            if (currentImage && noImagePlaceholder) {
+                if (existingImage) {
+                    currentImage.src = existingImage;
+                    currentImage.classList.remove("hidden");
+                    noImagePlaceholder.classList.add("hidden");
+                } else {
+                    currentImage.src = "";
+                    currentImage.classList.add("hidden");
+                    noImagePlaceholder.classList.remove("hidden");
+                    // Use first letter of position
+                    if (pos) noImagePlaceholder.textContent = pos.charAt(0);
+                }
+            }
+        });
+    });
+
+    // File input preview and state
+    let selectedFile: File | null = null;
+    if (fileInput) {
+        fileInput.addEventListener("change", (e) => {
+            const file = (e.target as HTMLInputElement).files?.[0];
+            if (file) {
+                selectedFile = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (
+                        currentImage &&
+                        noImagePlaceholder &&
+                        e.target?.result
+                    ) {
+                        currentImage.src = e.target.result as string;
+                        currentImage.classList.remove("hidden");
+                        noImagePlaceholder.classList.add("hidden");
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // 4. Drop Zone Logic
+    const dropZone = document.getElementById("dropZone");
+
+    // Make the entire drop zone clickable
+    if (dropZone && fileInput) {
+        dropZone.addEventListener("click", (e) => {
+            if (e.target !== fileInput) {
+                fileInput.click();
+            }
+        });
+
+        // Optional: Drag and drop visual feedback
+        dropZone.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            dropZone.classList.add("border-blue-500", "bg-blue-50");
+        });
+
+        dropZone.addEventListener("dragleave", (e) => {
+            e.preventDefault();
+            dropZone.classList.remove("border-blue-500", "bg-blue-50");
+        });
+
+        dropZone.addEventListener("drop", (e) => {
+            e.preventDefault();
+            dropZone.classList.remove("border-blue-500", "bg-blue-50");
+
+            if (e.dataTransfer && e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                // Manually trigger change event since setting .files programmatically doesn't always do it
+                const event = new Event("change");
+                fileInput.dispatchEvent(event);
+            }
+        });
+    }
+
+    // 5. Save/Upload Logic
+    const saveBtn = document.getElementById("saveBtn") as HTMLButtonElement;
+
+    if (saveBtn) {
+        saveBtn.addEventListener("click", async () => {
+            if (!selectedFile) {
+                alert("Please select an image first.");
+                return;
+            }
+
+            // UI Loading State
+            const originalText = saveBtn.textContent;
+            saveBtn.textContent = "Uploading...";
+            saveBtn.disabled = true;
+
+            const formData = new FormData();
+            formData.append("image", selectedFile);
+
+            // Get selected officer name (ensure UI has one selected)
+            const selectedNameElem = document.getElementById("selectedName");
+            const officerName = selectedNameElem
+                ? selectedNameElem.textContent
+                : "Unknown";
+            formData.append("name", officerName || "Unknown");
+
+            try {
+                // Adjust this URL if your backend runs on a different port/host
+                const response = await fetch(
+                    "/api/upload",
+                    {
+                        method: "POST",
+                        body: formData,
+                    },
+                );
+
+                const result = await response.json();
+
+                if (response.ok && result.success && officerName) {
+                    const imageUrl = result.data.url;
+
+                    // SAVE TO FIREBASE
+                    try {
+                        const docRef = doc(
+                            db,
+                            "settings",
+                            "officerProfilePictures",
+                        );
+                        // Use setDoc with merge: true to update only this field or create if missing
+                        await setDoc(
+                            docRef,
+                            {
+                                [officerName]: imageUrl,
+                            },
+                            { merge: true },
+                        );
+
+                        alert(
+                            "Image uploaded and saved to database successfully!",
+                        );
+
+                        // Update local UI state to reflect new image without reload
+                        const officerItems =
+                            document.querySelectorAll(".officer-item");
+                        officerItems.forEach((item) => {
+                            if (
+                                item.getAttribute("data-name") === officerName
+                            ) {
+                                item.setAttribute("data-image", imageUrl);
+                                const imgContainer =
+                                    item.querySelector(".flex-shrink-0");
+                                if (imgContainer) {
+                                    imgContainer.innerHTML = `
+                                         <img
+                                            src="${imageUrl}"
+                                            alt="${officerName}"
+                                            class="h-10 w-10 rounded-full object-cover border border-gray-200 group-hover:border-blue-300"
+                                        />
+                                    `;
+                                }
+                            }
+                        });
+                    } catch (dbError) {
+                        console.error("Database save error:", dbError);
+                        alert(
+                            `Image uploaded but failed to save to database: ${dbError}`,
+                        );
+                    }
+                } else {
+                    console.error("Upload failed details:", result);
+                    alert(
+                        "Upload failed: " +
+                            (result.message || "Unknown error") +
+                            (result.error ? "\nDetails: " + result.error : ""),
+                    );
+                }
+            } catch (error) {
+                console.error("Error uploading:", error);
+                alert(
+                    "An error occurred while uploading. Ensure backend is running.",
+                );
+            } finally {
+                // Reset UI
+                saveBtn.textContent = originalText;
+                saveBtn.disabled = false;
+            }
+        });
+    }
+</script>
