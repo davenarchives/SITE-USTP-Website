@@ -13,6 +13,7 @@
     <a href="https://firebase.google.com/"><img src="https://img.shields.io/badge/Firebase-Auth_&_DB-FFCA28?style=for-the-badge&logo=firebase" alt="Firebase" /></a>
     <a href="https://cloudinary.com/"><img src="https://img.shields.io/badge/Cloudinary-Media-3448C5?style=for-the-badge&logo=cloudinary" alt="Cloudinary" /></a>
     <a href="https://vercel.com/"><img src="https://img.shields.io/badge/Vercel-Deployment-000000?style=for-the-badge&logo=vercel" alt="Vercel" /></a>
+    <a href="https://tina.io"><img src="https://img.shields.io/badge/TinaCMS-Content-EC4899?style=for-the-badge&logo=tina" alt="TinaCMS" /></a>
   </p>
 
   <br />
@@ -45,6 +46,7 @@ This project is built using a modern, serverless-first architecture to ensure pe
 | **Backend & Auth** | [Firebase](https://firebase.google.com/) | Authentication (Google OAuth), Firestore (NoSQL DB) |
 | **Media Storage** | [Cloudinary](https://cloudinary.com/) | Optimized image hosting and transformation |
 | **Deployment** | [Vercel](https://vercel.com/) | Serverless functions and edge hosting |
+| **Content Manager** | [TinaCMS](https://tina.io) | Headless CMS for visual content editing |
 
 ## ✨ Key Features
 
@@ -54,6 +56,7 @@ This project is built using a modern, serverless-first architecture to ensure pe
 
 ### 🔐 Admin Portal
 - **Secure Login**: Google Sign-In integration via Firebase Auth using authorized institutional emails.
+- **Visual Editing**: Integrated **TinaCMS** for real-time, visual content management of events and news.
 - **Role-Based Access**: Strict access control for administrative features.
 - **Officer Manager**: Dedicated dashboard for updating officer details and uploading profile pictures.
 
