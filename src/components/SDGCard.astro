@@ -1,18 +1,29 @@
 ---
 interface Props {
-  sdgNumber: number;
-  title: string;
-  description: string;
-  colorClass?: string;
-  icon?: string; 
+    sdgNumber: number;
+    title: string;
+    description: string;
+    colorClass?: string;
+    icon?: string;
 }
 
-const { sdgNumber, title, description, colorClass = "bg-blue-600" } = Astro.props;
+const {
+    sdgNumber,
+    title,
+    description,
+    colorClass = "bg-blue-600",
+} = Astro.props;
 ---
 
 <div class="group relative flex flex-col items-center text-center p-4">
-    <div class={`w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4 ${colorClass} group-hover:scale-110 transition-transform`}>
-        {sdgNumber}
+    <div
+        class="w-24 h-24 mb-6 shadow-sm group-hover:-translate-y-2 transition-transform duration-300"
+    >
+        <img
+            src={`https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-${sdgNumber < 10 ? "0" + sdgNumber : sdgNumber}.jpg`}
+            alt={`SDG ${sdgNumber}: ${title}`}
+            class="w-full h-full object-cover"
+        />
     </div>
     <h3 class="text-xl font-bold text-gray-900 mb-2">{title}</h3>
     <p class="text-gray-500 text-sm leading-relaxed">
