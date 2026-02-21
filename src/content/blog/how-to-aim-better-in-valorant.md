@@ -1,6 +1,6 @@
 ---
 title: How to Aim Better in Valorant
-description: Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. '
 pubDate: 2026-02-21T17:45:38.535Z
 heroImage: /maxresdefault.jpg
 author: Elan Rhoydel
