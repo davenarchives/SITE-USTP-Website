@@ -37,14 +37,14 @@ export default defineConfig({
                     {
                         type: "string",
                         name: "title",
-                        label: "Title",
+                        label: "Header",
                         isTitle: true,
                         required: true,
                     },
                     {
                         type: "string",
                         name: "description",
-                        label: "Description",
+                        label: "Sub Header",
                         required: true,
                     },
                     {
@@ -131,7 +131,9 @@ export default defineConfig({
                     filename: {
                         readonly: true,
                         slugify: (values) => {
-                            return `${values?.title?.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '') || 'new-event'}`;
+                            const dateStr = values?.date ? new Date(values.date).toISOString().split('T')[0] : 'undated';
+                            const titleStr = values?.title?.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '') || 'new-event';
+                            return `${dateStr}-${titleStr}`;
                         },
                     },
                 },
@@ -167,14 +169,23 @@ export default defineConfig({
                     },
                     {
                         type: "string",
-                        name: "description",
-                        label: "Short Description",
+                        name: "city",
+                        label: "City / Region",
                         required: true,
+                        ui: {
+                            defaultValue: "Cagayan de Oro City",
+                        }
                     },
+
                     {
                         type: "string",
                         name: "registrationLink",
                         label: "Registration Link",
+                    },
+                    {
+                        type: "image",
+                        name: "heroImage",
+                        label: "Event Poster Subtitle/Image",
                     },
                     {
                         type: "rich-text",
