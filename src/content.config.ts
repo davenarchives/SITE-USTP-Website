@@ -1,6 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 
-const blog = defineCollection({
+const news = defineCollection({
     type: 'content',
     // Type-check frontmatter using a schema
     schema: z.object({
@@ -15,15 +15,6 @@ const blog = defineCollection({
     }),
 });
 
-const transparency = defineCollection({
-    type: 'content',
-    schema: z.object({
-        title: z.string(),
-        date: z.coerce.date(),
-        type: z.enum(['Financial', 'Meeting Minutes', 'Official Statement']),
-        fileUrl: z.string().optional(), // For PDF downloads if not pure markdown
-    })
-});
 
 const resources = defineCollection({
     type: 'data',
@@ -49,4 +40,4 @@ const events = defineCollection({
     })
 });
 
-export const collections = { blog, transparency, resources, events };
+export const collections = { news, resources, events };

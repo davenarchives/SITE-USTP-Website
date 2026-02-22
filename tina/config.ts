@@ -21,9 +21,9 @@ export default defineConfig({
     schema: {
         collections: [
             {
-                name: "blog",
-                label: "Blog Posts",
-                path: "src/content/blog",
+                name: "news",
+                label: "News",
+                path: "src/content/news",
                 format: "md",
                 ui: {
                     filename: {
@@ -82,44 +82,7 @@ export default defineConfig({
                     },
                 ],
             },
-            {
-                name: "transparency",
-                label: "Transparency Files",
-                path: "src/content/transparency",
-                fields: [
-                    {
-                        type: "string",
-                        name: "title",
-                        label: "Title",
-                        isTitle: true,
-                        required: true,
-                    },
-                    {
-                        type: "datetime",
-                        name: "date",
-                        label: "Date",
-                        required: true,
-                    },
-                    {
-                        type: "string",
-                        name: "type",
-                        label: "Type",
-                        options: ['Financial', 'Meeting Minutes', 'Official Statement'],
-                        required: true,
-                    },
-                    {
-                        type: "string",
-                        name: "fileUrl",
-                        label: "File URL",
-                    },
-                    {
-                        type: "rich-text",
-                        name: "body",
-                        label: "Body",
-                        isBody: true,
-                    },
-                ]
-            },
+
             {
                 name: "resources",
                 label: "Resources",

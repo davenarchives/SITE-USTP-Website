@@ -3,7 +3,7 @@ import MainLayout from "../../layouts/MainLayout.astro";
 import { getCollection } from "astro:content";
 import FormattedDate from "../../components/FormattedDate.astro";
 
-const posts = (await getCollection("blog")).sort(
+const posts = (await getCollection("news")).sort(
     (a, b) =>
         new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf(),
 );
