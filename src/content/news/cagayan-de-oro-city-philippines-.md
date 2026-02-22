@@ -20,4 +20,4 @@ Judging criteria included innovation, technical complexity, usability, and overa
 
 Students expressed their enthusiasm for the event, highlighting the valuable experience gained. “It pushed us beyond our limits and helped us apply what we’ve learned in class to real-life scenarios,” said one participant.
 
-The success of CodeFest 2026 marks another milestone for USTP in promoting technology-driven education and student innovation. The university plans to make the hackathon an annual event, further strengthening its commitment to developing future-ready graduates.
+The success of CodeFest 2026 marks another milestone for USTP in promoting technology-driven education and student innovation. The university plans to make the hackathon an annual event, further strengthening its commitment to developing future-ready graduates. 
