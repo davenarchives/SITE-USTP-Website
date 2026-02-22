@@ -31,3 +31,9 @@ tina/__generated__/
 # Custom ignores
 *.log
 git_status_out.txt
+
+# Content Ignores
+src/content/news/*
+!src/content/news/.gitkeep
+src/content/events/*
+!src/content/events/.gitkeep
