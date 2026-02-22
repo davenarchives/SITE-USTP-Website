@@ -3,7 +3,7 @@ title: CAPSTONE ORIENTATION | 3RD YEAR BSIT STUDENTS
 description: Attention 3rd Year BSIT Students!
 pubDate: 2026-01-13T11:29:42.736Z
 updatedDate: 2026-01-13T11:29:58.046Z
-heroImage: /615240683_1324658363012628_8860109004852765752_n.jpg
+heroImage: /615240683_1324658363012628_8860109004852765752_n (1).jpg
 author: Society of Information Technology Enthusiasts - USTP
 tags:
   - Announcement
