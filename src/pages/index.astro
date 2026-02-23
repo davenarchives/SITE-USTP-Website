@@ -11,18 +11,18 @@ const events = await getCollection("events");
 events.sort(
     (a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf(),
 );
-const upcomingEvents = events.slice(0, 3);
+const upcomingEvents = events.slice(0, 4);
 
 const posts = await getCollection("news");
 posts.sort(
     (a, b) =>
         new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf(),
 );
-const recentNews = posts.slice(0, 3);
+const recentNews = posts.slice(0, 4);
 
 // Fetch resources
 const allResources = await getCollection("resources");
-const recentResources = allResources.slice(0, 3);
+const recentResources = allResources.slice(0, 4);
 
 const formatDateNumber = (date: Date | string) => {
     return new Date(date).getDate().toString();
@@ -88,21 +88,23 @@ const formatMonthName = (date: Date | string) => {
             <!-- Upcoming Events Row -->
             <div class="mb-16">
                 <div
-                    class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-6 sm:mb-8 gap-3 sm:gap-0"
+                    class="flex flex-row justify-between items-center md:items-end mb-6 sm:mb-8"
                 >
                     <h3
-                        class="text-2xl font-bold text-gray-900 border-b-2 border-blue-600 pb-2 inline-block"
+                        class="text-xl sm:text-2xl font-bold text-gray-900 border-b-2 border-blue-600 pb-1 sm:pb-2 inline-block mb-0"
                     >
                         Events
                     </h3>
                     <a
                         href="/events"
-                        class="text-blue-600 hover:text-blue-800 font-medium"
+                        class="text-sm sm:text-base text-blue-600 hover:text-blue-800 font-medium whitespace-nowrap"
                         >View all events &rarr;</a
                     >
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-8">
+                <div
+                    class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-8"
+                >
                     {
                         upcomingEvents.map((event, index) => (
                             <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col hover:shadow-md transition-shadow h-full">
@@ -223,21 +225,23 @@ const formatMonthName = (date: Date | string) => {
             <!-- News / Blog Row -->
             <div>
                 <div
-                    class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-6 sm:mb-8 gap-3 sm:gap-0"
+                    class="flex flex-row justify-between items-center md:items-end mb-6 sm:mb-8"
                 >
                     <h3
-                        class="text-2xl font-bold text-gray-900 border-b-2 border-blue-600 pb-2 inline-block"
+                        class="text-xl sm:text-2xl font-bold text-gray-900 border-b-2 border-blue-600 pb-1 sm:pb-2 inline-block mb-0"
                     >
                         News
                     </h3>
                     <a
                         href="/news"
-                        class="text-blue-600 hover:text-blue-800 font-medium"
+                        class="text-sm sm:text-base text-blue-600 hover:text-blue-800 font-medium whitespace-nowrap"
                         >View all news &rarr;</a
                     >
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-8">
+                <div
+                    class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-8"
+                >
                     {
                         recentNews.map((post) => (
                             <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col hover:shadow-md transition-shadow h-full">
@@ -296,16 +300,16 @@ const formatMonthName = (date: Date | string) => {
             <!-- Resources Row -->
             <div class="mt-16">
                 <div
-                    class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-6 sm:mb-8 gap-3 sm:gap-0"
+                    class="flex flex-row justify-between items-center md:items-end mb-6 sm:mb-8"
                 >
                     <h3
-                        class="text-2xl font-bold text-gray-900 border-b-2 border-blue-600 pb-2 inline-block"
+                        class="text-xl sm:text-2xl font-bold text-gray-900 border-b-2 border-blue-600 pb-1 sm:pb-2 inline-block mb-0"
                     >
                         Resources
                     </h3>
                     <a
                         href="/resources"
-                        class="text-blue-600 hover:text-blue-800 font-medium"
+                        class="text-sm sm:text-base text-blue-600 hover:text-blue-800 font-medium whitespace-nowrap"
                         >View all resources &rarr;</a
                     >
                 </div>
@@ -313,7 +317,9 @@ const formatMonthName = (date: Date | string) => {
                 {
                     /* Horizontal scrollable container for the 'carousel' effect on smaller screens */
                 }
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-8">
+                <div
+                    class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-8"
+                >
                     {
                         recentResources.map((resource) => (
                             <div class="w-full">
