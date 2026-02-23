@@ -19,13 +19,17 @@ const post = Astro.props;
 const { Content } = await render(post);
 ---
 
-<MainLayout title={post.data.title} description={post.data.description}>
+<MainLayout
+    title={post.data.title}
+    description={post.data.description}
+    image={post.data.heroImage}
+>
     <article class="bg-white pb-16">
         <!-- Main Container -->
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
             <!-- Breadcrumbs / Top Label -->
             <div
-                class="flex items-center gap-2 text-sm text-gray-500 mb-6 font-medium uppercase tracking-wider"
+                class="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-500 mb-6 font-medium uppercase tracking-wider"
             >
                 <a href="/" class="hover:text-blue-600 transition-colors"
                     >Home</a
@@ -48,7 +52,7 @@ const { Content } = await render(post);
 
             <!-- Headline -->
             <h1
-                class="text-4xl sm:text-5xl font-extrabold text-[#111827] leading-tight mb-6 tracking-tight"
+                class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#111827] leading-tight mb-4 sm:mb-6 tracking-tight break-words"
             >
                 {post.data.title}
             </h1>
@@ -56,7 +60,7 @@ const { Content } = await render(post);
             <!-- Description -->
             {
                 post.data.description && (
-                    <p class="text-xl text-gray-500 mb-8 leading-relaxed">
+                    <p class="text-lg sm:text-xl text-gray-500 mb-6 sm:mb-8 leading-relaxed">
                         {post.data.description}
                     </p>
                 )
@@ -98,6 +102,7 @@ const { Content } = await render(post);
                     <button
                         class="w-8 h-8 rounded-full bg-gray-100 hover:bg-[#1877F2] hover:text-white text-gray-600 transition flex items-center justify-center"
                         aria-label="Share to Facebook"
+                        onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href), 'facebook-share-dialog', 'width=800,height=600'); return false;"
                     >
                         <svg
                             class="w-4 h-4"
@@ -111,6 +116,7 @@ const { Content } = await render(post);
                     <button
                         class="w-8 h-8 rounded-full bg-gray-100 hover:bg-[#1DA1F2] hover:text-white text-gray-600 transition flex items-center justify-center"
                         aria-label="Share to Twitter"
+                        onclick="window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(window.location.href) + '&text=' + encodeURIComponent(document.title), 'twitter-share-dialog', 'width=800,height=600'); return false;"
                     >
                         <svg
                             class="w-4 h-4"
@@ -157,7 +163,7 @@ const { Content } = await render(post);
 
             <!-- Article Content -->
             <div
-                class="prose prose-lg prose-blue mx-auto sm:mx-0 max-w-none prose-img:rounded-md prose-headings:font-bold prose-a:text-blue-600"
+                class="prose sm:prose-lg prose-blue mx-auto sm:mx-0 max-w-none prose-img:rounded-md prose-headings:font-bold prose-a:text-blue-600 break-words"
             >
                 <Content />
             </div>
