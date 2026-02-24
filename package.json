@@ -20,13 +20,23 @@
     "astro": "^5.16.15",
     "cloudinary": "^2.9.0",
     "firebase": "^12.8.0",
+    "fs-extra": "^11.3.3",
     "next-tinacms-cloudinary": "^22.0.1",
+    "react": "^19.2.4",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
+    "react-dom": "^19.2.4",
     "sharp": "^0.34.3",
+    "slate": "^0.123.0",
+    "slate-dom": "^0.123.0",
+    "slate-hyperscript": "^0.100.0",
+    "slate-react": "^0.123.0",
     "tailwindcss": "^4.1.18",
     "tinacms": "^3.5.0",
     "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.19"
+    "@tailwindcss/typography": "^0.5.19",
+    "vite": "^7.3.1"
   }
 }
