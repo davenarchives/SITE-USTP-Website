@@ -32,7 +32,7 @@
     "slate-hyperscript": "^0.100.0",
     "slate-react": "^0.123.0",
     "tailwindcss": "^4.1.18",
-    "tinacms": "^3.5.0",
+    "tinacms": "^3.5.1",
     "typescript": "^5.9.3"
   },
   "devDependencies": {
