@@ -3,7 +3,7 @@
     "departments": [
         {
             "name": "Executive Body",
-            "emoji": "⚪",
+            "emoji": "",
             "color": "#FFFFFF",
             "members": [
                 {
@@ -34,7 +34,7 @@
         },
         {
             "name": "Legislative Body",
-            "emoji": "🔵",
+            "emoji": "",
             "color": "#1E90FF",
             "members": [
                 {
@@ -61,7 +61,7 @@
         },
         {
             "name": "Administrative Cabinet",
-            "emoji": "🟡",
+            "emoji": "",
             "color": "#FFD700",
             "members": [
                 {
@@ -76,7 +76,7 @@
         },
         {
             "name": "Department of External Affairs",
-            "emoji": "🛡️",
+            "emoji": "",
             "color": "#4A90D9",
             "members": [
                 {
@@ -95,7 +95,7 @@
         },
         {
             "name": "Department of Liquidation and Finance",
-            "emoji": "💸",
+            "emoji": "",
             "color": "#2ECC71",
             "members": [
                 {
@@ -130,7 +130,7 @@
         },
         {
             "name": "Department of Creatives and Publication",
-            "emoji": "🎭",
+            "emoji": "",
             "color": "#9B59B6",
             "members": [
                 {
@@ -177,7 +177,7 @@
         },
         {
             "name": "Department of Leadership and Development",
-            "emoji": "⚖️",
+            "emoji": "",
             "color": "#E67E22",
             "members": [
                 {
@@ -212,7 +212,7 @@
         },
         {
             "name": "Department of Events and Production",
-            "emoji": "🎤",
+            "emoji": "",
             "color": "#E74C3C",
             "members": [
                 {
@@ -251,7 +251,7 @@
         },
         {
             "name": "Department of Technology",
-            "emoji": "💻",
+            "emoji": "",
             "color": "#3498DB",
             "members": [
                 {
@@ -278,7 +278,7 @@
         },
         {
             "name": "Department of Sports",
-            "emoji": "🏅",
+            "emoji": "",
             "color": "#F39C12",
             "members": [
                 {
@@ -289,7 +289,7 @@
         },
         {
             "name": "Electoral Commission",
-            "emoji": "⚫",
+            "emoji": "",
             "color": "#2C3E50",
             "members": [
                 {

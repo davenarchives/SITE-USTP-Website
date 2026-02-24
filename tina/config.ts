@@ -65,6 +65,11 @@ export default defineConfig({
                     },
                     {
                         type: "string",
+                        name: "photoDescription",
+                        label: "Photo Description",
+                    },
+                    {
+                        type: "string",
                         name: "author",
                         label: "Author",
                     },

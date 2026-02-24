@@ -4,6 +4,7 @@ description: "Today, we celebrate more than just a win—we celebrate passion, p
 pubDate: 2026-01-31T11:44:33.727Z
 updatedDate: 2026-01-31T11:44:36.782Z
 heroImage: /625278943_1339126231565841_8759800767142974832_n.jpg
+photoDescription: ''
 author: Society of Information Technology Enthusiasts - USTP
 tags:
   - Announcement
