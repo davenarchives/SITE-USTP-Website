@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-nocheck
 import { createMediaHandler } from "next-tinacms-cloudinary/dist/handlers";
 import { isAuthorized } from "@tinacms/auth";
 import type { APIRoute } from "astro";
