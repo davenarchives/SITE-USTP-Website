@@ -7,7 +7,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://site-ustp-website.vercel.app',
+  site: 'https://siteustp.vercel.app',
   integrations: [mdx(), sitemap()],
   adapter: vercel(),
   output: 'server',
