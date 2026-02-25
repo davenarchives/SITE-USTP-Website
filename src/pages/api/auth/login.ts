@@ -33,9 +33,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
                 status: 401,
             });
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Auth API Error:", error);
-        return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+        return new Response(JSON.stringify({ error: "Internal Server Error", details: error.message, stack: error.stack }), {
             status: 500,
         });
     }

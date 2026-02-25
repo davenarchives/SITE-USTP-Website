@@ -140,7 +140,13 @@ const isAuthenticated = Astro.cookies.has("site_admin_access");
             // Reload to show the admin interface (Cookie is now set by server)
             window.location.reload();
           } else {
-            throw new Error("Unauthorized");
+            console.error(
+              "Login response not ok:",
+              response.status,
+              response.statusText,
+            );
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || "Unauthorized");
           }
         } else {
           throw new Error("No user email found");
