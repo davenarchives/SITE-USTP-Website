@@ -1,0 +1,537 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+
+import { getCollection } from "astro:content";
+
+const fetchFileSize = async (url: string) => {
+    try {
+        // We use the raw URL to do a HEAD request to get file size headers
+        const res = await fetch(url, { method: "HEAD" });
+        if (res.ok) {
+            const size = res.headers.get("content-length");
+            if (size) {
+                const bytes = parseInt(size, 10);
+                if (bytes < 1024) return bytes + " B";
+                else if (bytes < 1048576)
+                    return (bytes / 1024).toFixed(1) + " KB";
+                else return (bytes / 1048576).toFixed(1) + " MB";
+            }
+        }
+    } catch (e) {
+        // Fallback for failed requests directly (or CORS/Auth blocks for PDF)
+    }
+    return ""; // Fallback gracefully if we can't extract sizes
+};
+
+const rawDocuments = await getCollection("documents");
+
+const documents = await Promise.all(
+    rawDocuments.map(async (d) => {
+        const extMatch = d.data.file?.match(/\.([a-z0-9]+)(?:[\?#]|$)/i);
+        const typeExt = extMatch ? extMatch[1].toUpperCase() : "PDF";
+        const finalSize = await fetchFileSize(d.data.file);
+
+        return {
+            ...d.data,
+            typeExt,
+            finalSize,
+        };
+    }),
+).then((docs) =>
+    docs.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+    ),
+);
+
+const formatDate = (dateStr: Date | string) => {
+    return new Date(dateStr).toLocaleString("default", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+    });
+};
+
+const getDownloadUrl = (url: string) => {
+    if (url && url.includes("cloudinary.com") && url.includes("/upload/")) {
+        // Inject fl_attachment to force Cloudinary to send Content-Disposition: attachment
+        return url.replace("/upload/", "/upload/fl_attachment/");
+    }
+    return url;
+};
+---
+
+<MainLayout title="Documents | SITE">
+    <div class="bg-gray-50 min-h-screen py-10 sm:py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-8 text-center">
+                <h1 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                    Organizations Transparency
+                </h1>
+                <p class="mt-2 text-gray-500">
+                    Public documents, reports, and procedures for organizational
+                    transparency.
+                </p>
+            </div>
+
+            <!-- Table Container -->
+            <div
+                class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+            >
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-white">
+                            <tr>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
+                                >
+                                    Document Title
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell"
+                                >
+                                    Category
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell"
+                                >
+                                    Type
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap hidden sm:table-cell"
+                                >
+                                    Date
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider"
+                                >
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-100">
+                            {
+                                documents.map((doc) => (
+                                    <tr class="document-row hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-start">
+                                                <div class="flex-shrink-0 bg-blue-50 text-blue-500 rounded p-2 mt-1 mr-4 border border-blue-100 hidden sm:block">
+                                                    <svg
+                                                        class="w-5 h-5"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            stroke-width="1.5"
+                                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <div class="text-sm font-bold text-[#1f2937] hover:text-blue-700 cursor-pointer">
+                                                        {doc.title}
+                                                    </div>
+                                                    <div class="text-xs text-gray-500 mt-0.5 line-clamp-1 truncate max-w-xs md:max-w-md">
+                                                        {doc.description}
+                                                    </div>
+                                                    <div class="mt-2 text-xs text-gray-400 flex items-center gap-2 md:hidden">
+                                                        <span class="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded font-medium">
+                                                            {doc.category ||
+                                                                "General"}
+                                                        </span>
+                                                        <span class="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded font-medium">
+                                                            {doc.typeExt}{" "}
+                                                            {doc.finalSize}
+                                                        </span>
+                                                        <span>
+                                                            {formatDate(
+                                                                doc.date,
+                                                            )}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap hidden md:table-cell">
+                                            <span class="bg-slate-100 text-slate-700 font-medium px-3 py-1 rounded-full text-xs border border-slate-200">
+                                                {doc.category || "General"}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap hidden md:table-cell">
+                                            <div class="flex items-center text-sm text-gray-500">
+                                                <span class="bg-gray-100 text-gray-700 font-medium px-2 py-0.5 rounded text-xs mr-2 border border-gray-200">
+                                                    {doc.typeExt}
+                                                </span>
+                                                {doc.finalSize}
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap hidden sm:table-cell">
+                                            <div class="flex items-center text-sm text-gray-500">
+                                                <svg
+                                                    class="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                    />
+                                                </svg>
+                                                {formatDate(doc.date)}
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <div class="flex items-center justify-end gap-2">
+                                                <button
+                                                    data-doc-url={doc.file}
+                                                    class="view-doc-btn inline-flex items-center justify-center text-gray-400 hover:text-gray-600 bg-gray-50 hover:bg-gray-100 p-2 rounded-md transition-colors border border-gray-100"
+                                                >
+                                                    <span class="sr-only">
+                                                        View
+                                                    </span>
+                                                    <svg
+                                                        class="w-4 h-4"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                                        />
+                                                        <path
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                                <a
+                                                    href={getDownloadUrl(
+                                                        doc.file,
+                                                    )}
+                                                    download
+                                                    class="inline-flex items-center justify-center text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 p-2 rounded-md transition-colors shadow-sm"
+                                                >
+                                                    <span class="sr-only">
+                                                        Download
+                                                    </span>
+                                                    <svg
+                                                        class="w-4 h-4"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                                        />
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination Footer -->
+                <div
+                    class="bg-white px-4 py-3 sm:px-6 border-t border-gray-200 flex items-center justify-between sm:flex-row flex-col gap-4"
+                >
+                    <div class="flex items-center text-sm text-gray-500">
+                        <span class="mr-2">Show</span>
+                        <select
+                            class="border border-gray-300 rounded-md text-gray-500 text-sm py-1 px-2 pr-6 focus:ring-blue-500 focus:border-blue-500"
+                        >
+                            <option>10</option>
+                            <option>20</option>
+                            <option>50</option>
+                        </select>
+                        <span class="ml-2">per page</span>
+                        <span class="ml-4 break-words" id="pagination-info"
+                            >Showing 1 to 10 of 10 items</span
+                        >
+                    </div>
+
+                    <div>
+                        <nav
+                            class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                            aria-label="Pagination"
+                        >
+                            <button
+                                class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                            >
+                                <span class="sr-only">Previous</span>
+                                <svg
+                                    class="h-5 w-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                            </button>
+                            <button
+                                class="relative inline-flex items-center px-4 py-2 border border-blue-500 bg-blue-600 text-sm font-medium text-white hover:bg-blue-700"
+                            >
+                                1
+                            </button>
+                            <button
+                                class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                            >
+                                <span class="sr-only">Next</span>
+                                <svg
+                                    class="h-5 w-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Document Preview Modal -->
+    <div id="doc-modal" class="fixed inset-0 z-[100] hidden">
+        <!-- Backdrop -->
+        <div
+            id="doc-modal-backdrop"
+            class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity"
+        >
+        </div>
+
+        <!-- Modal Content -->
+        <div
+            class="absolute inset-0 flex items-center justify-center p-4 sm:p-6 md:p-12"
+        >
+            <div
+                class="bg-white rounded-xl shadow-2xl w-full h-full max-w-6xl flex flex-col overflow-hidden relative z-10 transform transition-all flex flex-col"
+            >
+                <!-- Header -->
+                <div
+                    class="px-6 py-4 flex items-center justify-between border-b border-gray-200 bg-white"
+                >
+                    <h3 class="text-xl font-bold text-gray-900">
+                        Document Preview
+                    </h3>
+                    <div class="flex items-center gap-3">
+                        <a
+                            id="doc-modal-new-tab"
+                            href="#"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-sm font-medium text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-lg transition-colors"
+                        >
+                            Open in New Tab
+                        </a>
+                        <button
+                            id="doc-modal-close"
+                            class="text-gray-400 hover:text-gray-600 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                        >
+                            <span class="sr-only">Close</span>
+                            <svg
+                                class="w-6 h-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <!-- Iframe Container -->
+                <div class="flex-1 w-full bg-gray-100 relative">
+                    <!-- Loading Spinner Overlay (Shows until iframe loads) -->
+                    <div
+                        id="doc-modal-loader"
+                        class="absolute inset-0 flex items-center justify-center bg-gray-100/80 z-10"
+                    >
+                        <svg
+                            class="animate-spin h-8 w-8 text-blue-600"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <circle
+                                class="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                stroke-width="4"></circle>
+                            <path
+                                class="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                        </svg>
+                    </div>
+                    <!-- The iframe -->
+                    <iframe
+                        id="doc-modal-iframe"
+                        class="w-full h-full border-0"
+                        title="Document Preview"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</MainLayout>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Modal logic
+        const modal = document.getElementById("doc-modal");
+        const backdrop = document.getElementById("doc-modal-backdrop");
+        const closeBtn = document.getElementById("doc-modal-close");
+        const iframe = document.getElementById(
+            "doc-modal-iframe",
+        ) as HTMLIFrameElement;
+        const newTabBtn = document.getElementById(
+            "doc-modal-new-tab",
+        ) as HTMLAnchorElement;
+        const loader = document.getElementById("doc-modal-loader");
+        const viewButtons = document.querySelectorAll(".view-doc-btn");
+
+        const openModal = (url: string) => {
+            if (!modal || !iframe || !newTabBtn || !loader) return;
+            iframe.src = url;
+            newTabBtn.href = url;
+            loader.style.display = "flex";
+            modal.classList.remove("hidden");
+            document.body.style.overflow = "hidden";
+            iframe.onload = () => {
+                loader.style.display = "none";
+            };
+        };
+
+        const closeModal = () => {
+            if (!modal || !iframe) return;
+            modal.classList.add("hidden");
+            document.body.style.overflow = "";
+            iframe.src = "";
+        };
+
+        viewButtons.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const url = btn.getAttribute("data-doc-url");
+                if (url) openModal(url);
+            });
+        });
+
+        closeBtn?.addEventListener("click", closeModal);
+        backdrop?.addEventListener("click", closeModal);
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && !modal?.classList.contains("hidden"))
+                closeModal();
+        });
+
+        // Pagination logic
+        const rows = document.querySelectorAll(
+            ".document-row",
+        ) as NodeListOf<HTMLElement>;
+        const perPageSelect = document.querySelector(
+            "select",
+        ) as HTMLSelectElement;
+        const infoText = document.getElementById("pagination-info");
+        const prevBtn =
+            (document.querySelector('button[aria-label="Pagination"]')
+                ?.previousElementSibling as HTMLButtonElement) ||
+            document.querySelectorAll('nav[aria-label="Pagination"] button')[0];
+        const nextBtn = document.querySelectorAll(
+            'nav[aria-label="Pagination"] button',
+        )[2] as HTMLButtonElement;
+        const pageNumDisplay = document.querySelectorAll(
+            'nav[aria-label="Pagination"] button',
+        )[1] as HTMLButtonElement;
+
+        let currentPage = 1;
+        let itemsPerPage = parseInt(perPageSelect?.value || "10");
+
+        function updateTable() {
+            const totalItems = rows.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+            if (currentPage > totalPages) currentPage = Math.max(1, totalPages);
+
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = Math.min(start + itemsPerPage, totalItems);
+
+            rows.forEach((row, index) => {
+                if (index >= start && index < end) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+
+            if (infoText) {
+                infoText.textContent =
+                    totalItems === 0
+                        ? "Showing 0 to 0 of 0 items"
+                        : `Showing ${start + 1} to ${end} of ${totalItems} items`;
+            }
+
+            if (pageNumDisplay)
+                pageNumDisplay.textContent = currentPage.toString();
+        }
+
+        perPageSelect?.addEventListener("change", (e) => {
+            itemsPerPage = parseInt((e.target as HTMLSelectElement).value);
+            currentPage = 1;
+            updateTable();
+        });
+
+        prevBtn?.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                updateTable();
+            }
+        });
+
+        nextBtn?.addEventListener("click", () => {
+            const totalPages = Math.ceil(rows.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                updateTable();
+            }
+        });
+
+        updateTable();
+    });
+</script>
