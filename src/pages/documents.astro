@@ -53,33 +53,141 @@ const formatDate = (dateStr: Date | string) => {
 
 const getDownloadUrl = (url: string) => {
     if (url && url.includes("cloudinary.com") && url.includes("/upload/")) {
-        // Inject fl_attachment to force Cloudinary to send Content-Disposition: attachment
         return url.replace("/upload/", "/upload/fl_attachment/");
     }
     return url;
 };
+
+// Collect unique categories and years for filter dropdowns
+const categories = [
+    ...new Set(documents.map((d) => d.category ?? "General").filter(Boolean)),
+].sort();
+const years = [
+    ...new Set(documents.map((d) => new Date(d.date).getFullYear())),
+].sort((a, b) => b - a);
 ---
 
 <MainLayout title="Documents | SITE">
-    <div class="bg-gray-50 min-h-screen py-10 sm:py-16">
+    <div class="bg-gray-50 min-h-screen py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="mb-8 text-center">
+            <!-- Page Header — consistent with Officers / Resources -->
+            <div class="text-center mb-10">
                 <h1 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
                     Organizations Transparency
                 </h1>
-                <p class="mt-2 text-gray-500">
+                <p class="mt-4 text-xl text-gray-500">
                     Public documents, reports, and procedures for organizational
                     transparency.
                 </p>
             </div>
 
+            <!-- Search + Filter Bar -->
+            <div
+                class="bg-white rounded-xl shadow-sm border border-gray-200 px-4 sm:px-6 py-4 mb-6"
+            >
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <!-- Search input -->
+                    <div class="relative flex-1">
+                        <div
+                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                        >
+                            <svg
+                                class="h-5 w-5 text-gray-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                ></path>
+                            </svg>
+                        </div>
+                        <input
+                            id="doc-search"
+                            type="text"
+                            placeholder="Search documents by title or description..."
+                            class="block w-full pl-10 pr-4 py-2.5 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                    </div>
+                    <!-- Category filter -->
+                    <div class="relative">
+                        <select
+                            id="doc-filter-category"
+                            class="appearance-none block w-full pl-3 pr-8 py-2.5 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                        >
+                            <option value="">All Categories</option>
+                            {
+                                categories.map((cat) => (
+                                    <option value={cat}>{cat}</option>
+                                ))
+                            }
+                        </select>
+                        <div
+                            class="pointer-events-none absolute inset-y-0 right-2 flex items-center"
+                        >
+                            <svg
+                                class="h-4 w-4 text-gray-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <!-- Year filter -->
+                    <div class="relative">
+                        <select
+                            id="doc-filter-year"
+                            class="appearance-none block w-full pl-3 pr-8 py-2.5 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                        >
+                            <option value="">All Years</option>
+                            {
+                                years.map((yr) => (
+                                    <option value={String(yr)}>{yr}</option>
+                                ))
+                            }
+                        </select>
+                        <div
+                            class="pointer-events-none absolute inset-y-0 right-2 flex items-center"
+                        >
+                            <svg
+                                class="h-4 w-4 text-gray-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <!-- Results count -->
+                <p class="mt-2 text-xs text-gray-500">
+                    Showing <strong id="doc-visible-count"
+                        >{documents.length}</strong
+                    > of <strong>{documents.length}</strong> documents
+                </p>
+            </div>
+
             <!-- Table Container -->
             <div
-                class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+                class="bg-transparent md:bg-white md:rounded-xl md:shadow-sm md:border md:border-gray-200 overflow-visible md:overflow-hidden"
             >
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-white">
+                <div class="overflow-x-auto overflow-y-visible">
+                    <table class="min-w-full block md:table border-collapse">
+                        <thead class="bg-white hidden md:table-header-group">
                             <tr>
                                 <th
                                     scope="col"
@@ -113,13 +221,29 @@ const getDownloadUrl = (url: string) => {
                                 </th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-100">
+                        <tbody
+                            class="block md:table-row-group flex flex-col gap-4 md:gap-0 bg-transparent md:bg-white md:divide-y md:divide-gray-100"
+                        >
                             {
                                 documents.map((doc) => (
-                                    <tr class="document-row hover:bg-gray-50 transition-colors">
-                                        <td class="px-6 py-4">
-                                            <div class="flex items-start">
-                                                <div class="flex-shrink-0 bg-blue-50 text-blue-500 rounded p-2 mt-1 mr-4 border border-blue-100 hidden sm:block">
+                                    <tr
+                                        class="document-row block md:table-row bg-white border border-gray-200 md:border-none rounded-xl md:rounded-none p-5 md:p-0 shadow-sm md:shadow-none hover:bg-gray-50 transition-colors relative"
+                                        data-title={(
+                                            doc.title ?? ""
+                                        ).toLowerCase()}
+                                        data-description={(
+                                            doc.description ?? ""
+                                        ).toLowerCase()}
+                                        data-category={(
+                                            doc.category ?? "General"
+                                        ).toLowerCase()}
+                                        data-year={String(
+                                            new Date(doc.date).getFullYear(),
+                                        )}
+                                    >
+                                        <td class="block md:table-cell px-0 md:px-6 py-0 md:py-4">
+                                            <div class="flex items-start pr-12 md:pr-0">
+                                                <div class="flex-shrink-0 bg-surface-muted text-primary rounded-lg p-2.5 mt-0.5 mr-4 border border-border-muted flex items-center justify-center">
                                                     <svg
                                                         class="w-5 h-5"
                                                         fill="none"
@@ -134,23 +258,44 @@ const getDownloadUrl = (url: string) => {
                                                         />
                                                     </svg>
                                                 </div>
-                                                <div>
-                                                    <div class="text-sm font-bold text-[#1f2937] hover:text-blue-700 cursor-pointer">
+                                                <div class="flex-1">
+                                                    <div
+                                                        class="text-[0.95rem] md:text-sm font-bold text-text-main hover:text-primary cursor-pointer leading-tight mb-1"
+                                                        onclick={`document.querySelector('button[data-doc-url="${doc.file}"]').click()`}
+                                                    >
                                                         {doc.title}
                                                     </div>
-                                                    <div class="text-xs text-gray-500 mt-0.5 line-clamp-1 truncate max-w-xs md:max-w-md">
+                                                    <div class="text-xs text-text-muted line-clamp-2 md:line-clamp-1 truncate max-w-[200px] sm:max-w-xs md:max-w-md mb-4 md:mb-0">
                                                         {doc.description}
                                                     </div>
-                                                    <div class="mt-2 text-xs text-gray-400 flex items-center gap-2 md:hidden">
-                                                        <span class="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded font-medium">
+                                                    <div class="text-xs text-text-muted flex items-center flex-wrap gap-2 md:hidden mt-2">
+                                                        <span class="bg-surface-muted text-text-main px-3 py-1 rounded-full font-medium">
                                                             {doc.category ||
                                                                 "General"}
                                                         </span>
-                                                        <span class="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded font-medium">
-                                                            {doc.typeExt}{" "}
+                                                        <span class="bg-surface-muted text-text-main px-2 py-1 rounded font-medium shrink-0">
+                                                            {doc.typeExt}
+                                                        </span>
+                                                        <span class="font-medium ml-1 shrink-0">
                                                             {doc.finalSize}
                                                         </span>
-                                                        <span>
+                                                        <span class="text-border-muted mx-0.5">
+                                                            •
+                                                        </span>
+                                                        <span class="flex items-center gap-1 shrink-0">
+                                                            <svg
+                                                                class="h-3.5 w-3.5"
+                                                                fill="none"
+                                                                viewBox="0 0 24 24"
+                                                                stroke="currentColor"
+                                                            >
+                                                                <path
+                                                                    stroke-linecap="round"
+                                                                    stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                                />
+                                                            </svg>
                                                             {formatDate(
                                                                 doc.date,
                                                             )}
@@ -159,12 +304,12 @@ const getDownloadUrl = (url: string) => {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap hidden md:table-cell">
+                                        <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap">
                                             <span class="bg-slate-100 text-slate-700 font-medium px-3 py-1 rounded-full text-xs border border-slate-200">
                                                 {doc.category || "General"}
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap hidden md:table-cell">
+                                        <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center text-sm text-gray-500">
                                                 <span class="bg-gray-100 text-gray-700 font-medium px-2 py-0.5 rounded text-xs mr-2 border border-gray-200">
                                                     {doc.typeExt}
@@ -172,7 +317,7 @@ const getDownloadUrl = (url: string) => {
                                                 {doc.finalSize}
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap hidden sm:table-cell">
+                                        <td class="hidden sm:table-cell px-6 py-4 whitespace-nowrap md:w-auto">
                                             <div class="flex items-center text-sm text-gray-500">
                                                 <svg
                                                     class="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400"
@@ -190,17 +335,17 @@ const getDownloadUrl = (url: string) => {
                                                 {formatDate(doc.date)}
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <td class="block md:table-cell px-0 md:px-6 py-0 md:py-4 absolute top-4 right-4 md:static md:w-auto whitespace-nowrap text-right text-sm font-medium">
                                             <div class="flex items-center justify-end gap-2">
                                                 <button
                                                     data-doc-url={doc.file}
-                                                    class="view-doc-btn inline-flex items-center justify-center text-gray-400 hover:text-gray-600 bg-gray-50 hover:bg-gray-100 p-2 rounded-md transition-colors border border-gray-100"
+                                                    class="view-doc-btn inline-flex items-center justify-center text-primary md:text-text-dim hover:bg-surface-muted md:hover:text-text-main bg-transparent md:bg-surface-muted md:hover:bg-surface-accent p-2 rounded-full md:rounded-md transition-colors border-none md:border md:border-border-muted"
                                                 >
                                                     <span class="sr-only">
                                                         View
                                                     </span>
                                                     <svg
-                                                        class="w-4 h-4"
+                                                        class="w-6 h-6 md:w-4 md:h-4"
                                                         fill="none"
                                                         stroke="currentColor"
                                                         viewBox="0 0 24 24"
@@ -224,13 +369,13 @@ const getDownloadUrl = (url: string) => {
                                                         doc.file,
                                                     )}
                                                     download
-                                                    class="inline-flex items-center justify-center text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 p-2 rounded-md transition-colors shadow-sm"
+                                                    class="inline-flex items-center justify-center text-primary md:text-text-on-primary bg-transparent hover:bg-surface-muted md:bg-primary md:hover:bg-primary-hover p-2 rounded-full md:rounded-md transition-colors md:shadow-sm"
                                                 >
                                                     <span class="sr-only">
                                                         Download
                                                     </span>
                                                     <svg
-                                                        class="w-4 h-4"
+                                                        class="w-6 h-6 md:w-4 md:h-4"
                                                         fill="none"
                                                         stroke="currentColor"
                                                         viewBox="0 0 24 24"
@@ -238,8 +383,8 @@ const getDownloadUrl = (url: string) => {
                                                         <path
                                                             stroke-linecap="round"
                                                             stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                                            stroke-width="1.5"
+                                                            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
                                                         />
                                                     </svg>
                                                 </a>
@@ -254,11 +399,12 @@ const getDownloadUrl = (url: string) => {
 
                 <!-- Pagination Footer -->
                 <div
-                    class="bg-white px-4 py-3 sm:px-6 border-t border-gray-200 flex items-center justify-between sm:flex-row flex-col gap-4"
+                    class="bg-white px-4 py-3 sm:px-6 border border-gray-200 md:border-transparent md:border-t-gray-200 rounded-xl md:rounded-none mt-4 md:mt-0 shadow-sm md:shadow-none flex items-center justify-between sm:flex-row flex-col gap-4"
                 >
                     <div class="flex items-center text-sm text-gray-500">
                         <span class="mr-2">Show</span>
                         <select
+                            id="per-page-select"
                             class="border border-gray-300 rounded-md text-gray-500 text-sm py-1 px-2 pr-6 focus:ring-blue-500 focus:border-blue-500"
                         >
                             <option>10</option>
@@ -415,7 +561,7 @@ const getDownloadUrl = (url: string) => {
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        // Modal logic
+        // ── Modal ──────────────────────────────────────────────────────────
         const modal = document.getElementById("doc-modal");
         const backdrop = document.getElementById("doc-modal-backdrop");
         const closeBtn = document.getElementById("doc-modal-close");
@@ -426,7 +572,7 @@ const getDownloadUrl = (url: string) => {
             "doc-modal-new-tab",
         ) as HTMLAnchorElement;
         const loader = document.getElementById("doc-modal-loader");
-        const viewButtons = document.querySelectorAll(".view-doc-btn");
+        const viewBtns = document.querySelectorAll(".view-doc-btn");
 
         const openModal = (url: string) => {
             if (!modal || !iframe || !newTabBtn || !loader) return;
@@ -439,21 +585,18 @@ const getDownloadUrl = (url: string) => {
                 loader.style.display = "none";
             };
         };
-
         const closeModal = () => {
             if (!modal || !iframe) return;
             modal.classList.add("hidden");
             document.body.style.overflow = "";
             iframe.src = "";
         };
-
-        viewButtons.forEach((btn) => {
+        viewBtns.forEach((btn) => {
             btn.addEventListener("click", () => {
                 const url = btn.getAttribute("data-doc-url");
                 if (url) openModal(url);
             });
         });
-
         closeBtn?.addEventListener("click", closeModal);
         backdrop?.addEventListener("click", closeModal);
         document.addEventListener("keydown", (e) => {
@@ -461,18 +604,27 @@ const getDownloadUrl = (url: string) => {
                 closeModal();
         });
 
-        // Pagination logic
-        const rows = document.querySelectorAll(
-            ".document-row",
-        ) as NodeListOf<HTMLElement>;
-        const perPageSelect = document.querySelector(
-            "select",
+        // ── Search + Filter + Pagination ───────────────────────────────────
+        const allRows = Array.from(
+            document.querySelectorAll<HTMLTableRowElement>(".document-row"),
+        );
+        const searchInput = document.getElementById(
+            "doc-search",
+        ) as HTMLInputElement;
+        const catSelect = document.getElementById(
+            "doc-filter-category",
         ) as HTMLSelectElement;
+        const yearSelect = document.getElementById(
+            "doc-filter-year",
+        ) as HTMLSelectElement;
+        const perPageSelect = document.getElementById(
+            "per-page-select",
+        ) as HTMLSelectElement | null;
+        const visibleCount = document.getElementById("doc-visible-count");
         const infoText = document.getElementById("pagination-info");
-        const prevBtn =
-            (document.querySelector('button[aria-label="Pagination"]')
-                ?.previousElementSibling as HTMLButtonElement) ||
-            document.querySelectorAll('nav[aria-label="Pagination"] button')[0];
+        const prevBtn = document.querySelectorAll(
+            'nav[aria-label="Pagination"] button',
+        )[0] as HTMLButtonElement;
         const nextBtn = document.querySelectorAll(
             'nav[aria-label="Pagination"] button',
         )[2] as HTMLButtonElement;
@@ -481,57 +633,88 @@ const getDownloadUrl = (url: string) => {
         )[1] as HTMLButtonElement;
 
         let currentPage = 1;
-        let itemsPerPage = parseInt(perPageSelect?.value || "10");
+        let itemsPerPage = parseInt(perPageSelect?.value ?? "10") || 10;
+        let filteredRows: HTMLTableRowElement[] = allRows;
 
-        function updateTable() {
-            const totalItems = rows.length;
-            const totalPages = Math.ceil(totalItems / itemsPerPage);
+        function applyFilters() {
+            const q = searchInput?.value.toLowerCase().trim() ?? "";
+            const cat = catSelect?.value.toLowerCase() ?? "";
+            const year = yearSelect?.value ?? "";
 
-            if (currentPage > totalPages) currentPage = Math.max(1, totalPages);
+            filteredRows = allRows.filter((row) => {
+                const title = row.getAttribute("data-title") ?? "";
+                const desc = row.getAttribute("data-description") ?? "";
+                const rowCat = row.getAttribute("data-category") ?? "";
+                const rowYear = row.getAttribute("data-year") ?? "";
 
-            const start = (currentPage - 1) * itemsPerPage;
-            const end = Math.min(start + itemsPerPage, totalItems);
-
-            rows.forEach((row, index) => {
-                if (index >= start && index < end) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
+                const matchQ = !q || title.includes(q) || desc.includes(q);
+                const matchCat = !cat || rowCat === cat;
+                const matchYear = !year || rowYear === year;
+                return matchQ && matchCat && matchYear;
             });
 
-            if (infoText) {
-                infoText.textContent =
-                    totalItems === 0
-                        ? "Showing 0 to 0 of 0 items"
-                        : `Showing ${start + 1} to ${end} of ${totalItems} items`;
-            }
+            // Hide all first
+            allRows.forEach((r) => {
+                r.style.display = "none";
+            });
 
-            if (pageNumDisplay)
-                pageNumDisplay.textContent = currentPage.toString();
+            currentPage = 1;
+            renderPage();
         }
 
-        perPageSelect?.addEventListener("change", (e) => {
+        function renderPage() {
+            const total = filteredRows.length;
+            const totalPages = Math.max(1, Math.ceil(total / itemsPerPage));
+            if (currentPage > totalPages) currentPage = totalPages;
+
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = Math.min(start + itemsPerPage, total);
+
+            allRows.forEach((r) => {
+                r.style.display = "none";
+            });
+            filteredRows.slice(start, end).forEach((r) => {
+                r.style.display = "";
+            });
+
+            if (visibleCount) visibleCount.textContent = String(total);
+            if (infoText) {
+                infoText.textContent =
+                    total === 0
+                        ? "Showing 0 to 0 of 0 items"
+                        : `Showing ${start + 1} to ${end} of ${total} items`;
+            }
+            if (pageNumDisplay)
+                pageNumDisplay.textContent = String(currentPage);
+        }
+
+        searchInput?.addEventListener("input", () => applyFilters());
+        catSelect?.addEventListener("change", () => applyFilters());
+        yearSelect?.addEventListener("change", () => applyFilters());
+
+        perPageSelect?.addEventListener("change", (e: Event) => {
             itemsPerPage = parseInt((e.target as HTMLSelectElement).value);
             currentPage = 1;
-            updateTable();
+            renderPage();
         });
-
         prevBtn?.addEventListener("click", () => {
             if (currentPage > 1) {
                 currentPage--;
-                updateTable();
+                renderPage();
             }
         });
-
         nextBtn?.addEventListener("click", () => {
-            const totalPages = Math.ceil(rows.length / itemsPerPage);
+            const totalPages = Math.max(
+                1,
+                Math.ceil(filteredRows.length / itemsPerPage),
+            );
             if (currentPage < totalPages) {
                 currentPage++;
-                updateTable();
+                renderPage();
             }
         });
 
-        updateTable();
+        // Initial render
+        applyFilters();
     });
 </script>

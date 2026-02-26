@@ -43,9 +43,11 @@ const isHome = Astro.url.pathname === "/" || Astro.url.pathname === "";
 		<meta property="twitter:description" content={description} />
 		<meta property="twitter:image" content={new URL(image, Astro.url)} />
 	</head>
-	<body class="min-h-screen flex flex-col font-body bg-white">
+	<body
+		class="min-h-screen flex flex-col font-body bg-surface-base text-text-muted transition-colors duration-200"
+	>
 		<Header />
-		<main class={`flex-grow ${isHome ? "" : "pt-16"}`}>
+		<main class={`flex-grow ${isHome ? "" : "pt-16"} bg-surface-base`}>
 			<slot />
 		</main>
 		<Footer />

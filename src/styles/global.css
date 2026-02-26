@@ -2,13 +2,39 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-site-blue: #4169E1;
-  /* Royal Blue */
-  --color-site-cyan: #00FFFF;
-  /* Cyan */
+  /* Site Theme Colors */
+  --color-primary: #4169E1;
+  --color-primary-hover: #3158cf;
+  --color-secondary: #00FFFF;
 
+  /* Semantic Tokens for Surface/Backgrounds */
+  --color-surface-base: white;
+  --color-surface-muted: #F9FAFB;
+  --color-surface-card: white;
+  --color-surface-accent: #EFF6FF;
+
+  /* Semantic Tokens for Text */
+  --color-text-main: #111827;
+  --color-text-muted: #4B5563;
+  --color-text-dim: #9CA3AF;
+  --color-text-on-primary: white;
+
+  /* Border & Focus */
+  --color-border-base: #E5E7EB;
+  --color-border-muted: #F3F4F6;
+  --color-focus: #3B82F6;
+
+  /* Typography */
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
+
+  /* Design Tokens */
+  --radius-site: 0.75rem;
+  --shadow-site: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+:root {
+  --site-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @layer base {
@@ -20,7 +46,7 @@
   }
 
   body {
-    @apply font-body text-gray-800 bg-white;
+    @apply font-body text-text-muted bg-surface-base;
   }
 
   h1,
@@ -29,6 +55,6 @@
   h4,
   h5,
   h6 {
-    @apply font-heading font-bold text-gray-900;
+    @apply font-heading font-bold text-text-main;
   }
 }
