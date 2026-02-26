@@ -1,0 +1,40 @@
+﻿Starting Tina build
+npx : file:///C:/Github%20Rep
+os/SITE-USTP-Website/node_mod
+ules/@tinacms/cli/dist/index.
+js:1272
+At line:1 char:1
++ npx tinacms build 2>&1 | 
+Out-File tina.log -Encoding 
+utf8
++ ~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: (file://  
+  /C:/Gith...t/index.js:12   
+ 72:String) [], RemoteExc    
+eption
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+      throw new Error(
+      ^
+
+Error: Tina Dev server is 
+already in use. Datalayer 
+server is busy on port 9000
+    at Server.<anonymous> (fi
+le:///C:/Github%20Repos/SITE-
+USTP-Website/node_modules/@ti
+nacms/cli/dist/index.js:1272:
+13)
+    at Object.onceWrapper 
+(node:events:639:26)
+    at Server.emit 
+(node:events:524:28)
+    at emitErrorNT 
+(node:net:1944:8)
+    at process.processTicksAn
+dRejections (node:internal/pr
+ocess/task_queues:82:21)
+
+Node.js v20.20.0

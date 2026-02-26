@@ -5,6 +5,8 @@ import SDGCard from "../components/SDGCard.astro";
 import ResourceGrid from "../components/ResourceGrid.astro";
 import { getCollection } from "astro:content";
 import FormattedDate from "../components/FormattedDate.astro";
+import foundingTitansImg from "../assets/founding-titans.jpg";
+import siteMembersImg from "../assets/site-members.jpg";
 
 // Fetch and prepare data
 const events = await getCollection("events");
@@ -36,48 +38,125 @@ const formatMonthName = (date: Date | string) => {
 <MainLayout>
     <Hero />
 
-    <!-- SDGs Section -->
-    <section class="py-16 bg-white">
+    <!-- About & SDGs Bento Section -->
+    <section class="py-12 md:py-16 bg-[#fafafa]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-left mb-12">
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
-                    Our Commitment to UN Sustainable Development Goals
-                </h2>
-            </div>
-
             <div
-                class="grid grid-cols-5 gap-1 sm:gap-2 md:grid-cols-3 lg:grid-cols-5 md:gap-8 justify-items-center"
+                class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 md:auto-rows-[180px]"
             >
-                <SDGCard
-                    sdgNumber={12}
-                    title="Responsible Consumption and Production"
-                    description="Ensuring sustainable consumption and production patterns."
-                    colorClass="bg-[#bf8b2e]"
-                />
-                <SDGCard
-                    sdgNumber={9}
-                    title="Industry, Innovation and Infrastructure"
-                    description="Building resilient infrastructure, promoting inclusive and sustainable industrialization."
-                    colorClass="bg-[#fd6925]"
-                />
-                <SDGCard
-                    sdgNumber={10}
-                    title="Reduced Inequalities"
-                    description="Reducing inequality within and among countries."
-                    colorClass="bg-[#dd1367]"
-                />
-                <SDGCard
-                    sdgNumber={4}
-                    title="Quality Education"
-                    description="Ensuring inclusive and equitable quality education and promoting lifelong learning opportunities for all."
-                    colorClass="bg-[#c5192d]"
-                />
-                <SDGCard
-                    sdgNumber={8}
-                    title="Decent Work and Economic Growth"
-                    description="Promoting sustained, inclusive and sustainable economic growth, full and productive employment."
-                    colorClass="bg-[#a21942]"
-                />
+                <!-- Who Are We (Span 2x2) -->
+                <div
+                    class="md:col-span-2 md:row-span-2 bg-white rounded-[2rem] p-6 sm:p-8 shadow-sm flex flex-col border border-gray-100 overflow-hidden"
+                >
+                    <div
+                        class="w-fit px-3 py-1.5 rounded-full bg-[#e8f0fe] text-blue-600 font-bold text-xs mb-4 sm:mb-6 flex items-center gap-2 shrink-0"
+                    >
+                        <svg
+                            class="w-4 h-4"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                            ><path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                            ></path></svg
+                        >
+                        Who We Are
+                    </div>
+                    <div class="flex-1 min-h-0 flex flex-col justify-center">
+                        <h2
+                            class="text-4xl sm:text-[3.25rem] font-bold text-[#111827] mb-3 sm:mb-4 tracking-tight leading-[1.05]"
+                        >
+                            Empowering <br class="hidden sm:block" /><span
+                                class="text-[#2563eb]">IT Professionals</span
+                            >
+                        </h2>
+                        <p
+                            class="text-[#4b5563] text-sm sm:text-base leading-relaxed max-w-lg font-medium"
+                        >
+                            A passionate community uplifting society and solving
+                            problems through science, technology, and
+                            innovation.
+                        </p>
+                    </div>
+                    <div class="mt-4 sm:mt-6 shrink-0">
+                        <a
+                            href="/about"
+                            class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-bold rounded-full text-white bg-[#0f172a] hover:bg-[#1e293b] transition-colors shadow-sm"
+                        >
+                            More About Us &rarr;
+                        </a>
+                    </div>
+                </div>
+
+                <!-- SDG Commitment Card (Blue, Span 2x1) -->
+                <div
+                    class="md:col-span-2 md:row-span-1 bg-gradient-to-r from-blue-500 to-blue-700 rounded-[2rem] p-6 shadow-sm flex flex-col justify-center relative overflow-hidden"
+                >
+                    <div
+                        class="flex flex-col sm:flex-row sm:items-center justify-between mb-3 md:mb-4 relative z-10 gap-3 px-2"
+                    >
+                        <div
+                            class="w-fit px-3 py-1 rounded-full bg-white/20 text-white font-bold text-xs uppercase tracking-wider backdrop-blur-md"
+                        >
+                            Our Commitment
+                        </div>
+                        <h3
+                            class="text-white font-bold text-lg hidden sm:block"
+                        >
+                            SDGs
+                        </h3>
+                    </div>
+                    <div
+                        class="relative z-10 flex flex-col justify-center h-full"
+                    >
+                        <div
+                            class="grid grid-cols-5 gap-2 md:gap-3 w-full px-2"
+                        >
+                            {
+                                [12, 9, 10, 4, 8].map((num) => (
+                                    <div class="rounded-xl overflow-hidden shadow-sm aspect-square relative group hover:-translate-y-1 transition-transform duration-300">
+                                        <img
+                                            src={`https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-${num < 10 ? "0" + num : num}.jpg`}
+                                            alt={`SDG ${num}`}
+                                            class="w-full h-full object-cover absolute inset-0"
+                                        />
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mission (Span 1x1, Yellow) -->
+                <div
+                    class="md:col-span-1 md:row-span-1 bg-[#fbbf24] rounded-[2rem] p-6 shadow-sm flex flex-col items-center justify-center text-center relative overflow-hidden group"
+                >
+                    <h3
+                        class="text-4xl sm:text-5xl font-black text-gray-900 mb-2 relative z-10"
+                    >
+                        Mission
+                    </h3>
+                    <p
+                        class="text-gray-800 text-[10px] font-bold uppercase tracking-widest relative z-10 flex border-t border-gray-900/10 pt-2"
+                    >
+                        Empower IT Students
+                    </p>
+                </div>
+
+                <!-- Vision (Span 1x1, Dark) -->
+                <div
+                    class="md:col-span-1 md:row-span-1 bg-[#0f172a] rounded-[2rem] p-6 shadow-sm flex flex-col items-center justify-center text-center relative overflow-hidden group"
+                >
+                    <h3
+                        class="text-3xl sm:text-4xl font-black text-white mb-2 relative z-10"
+                    >
+                        Vision
+                    </h3>
+                    <p
+                        class="text-gray-400 text-[10px] font-bold uppercase tracking-widest relative z-10 flex border-t border-white/10 pt-2"
+                    >
+                        Premier IT Leaders
+                    </p>
+                </div>
             </div>
         </div>
     </section>

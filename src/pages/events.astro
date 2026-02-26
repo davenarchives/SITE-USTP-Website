@@ -4,9 +4,21 @@ import EventCalendar from "../components/EventCalendar.astro";
 import { getCollection } from "astro:content";
 
 const events = await getCollection("events");
-events.sort(
-    (a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf(),
-);
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const upcomingEvents = events.filter(event => {
+    const eventDateStr = event.data.endDate || event.data.date;
+    const eventDate = new Date(eventDateStr);
+    return eventDate >= today;
+}).sort((a, b) => new Date(a.data.date).valueOf() - new Date(b.data.date).valueOf());
+
+const concludedEvents = events.filter(event => {
+    const eventDateStr = event.data.endDate || event.data.date;
+    const eventDate = new Date(eventDateStr);
+    return eventDate < today;
+}).sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
 
 const formatDateNumber = (date: Date | string) => {
     return new Date(date).getDate().toString();
@@ -23,7 +35,7 @@ const formatMonthName = (date: Date | string) => {
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h1 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-                    Upcoming Events
+                    Events
                 </h1>
                 <p class="mt-4 text-xl text-gray-500">
                     Join us for workshops, hackathons, and community gatherings.
@@ -33,10 +45,33 @@ const formatMonthName = (date: Date | string) => {
             <!-- Event Calendar Embed -->
             <EventCalendar />
 
-            <!-- Featured Upcoming Events List -->
-            <div class="grid grid-cols-2 md:grid-cols-1 gap-3 sm:gap-8">
+            <!-- Event Category Toggle -->
+            <div class="flex justify-center mt-10 mb-2">
+                <div class="inline-flex bg-gray-100 rounded-lg p-1 space-x-1 overflow-hidden font-medium text-sm">
+                    <button class="event-filter-btn active-tab px-4 py-2 rounded-md transition-colors" data-filter="All">
+                        All
+                    </button>
+                    <button class="event-filter-btn px-4 py-2 rounded-md transition-colors text-gray-600 hover:text-gray-900" data-filter="Upcoming Events">
+                        Upcoming
+                    </button>
+                    <button class="event-filter-btn px-4 py-2 rounded-md transition-colors text-gray-600 hover:text-gray-900" data-filter="Concluded Events">
+                        Concluded
+                    </button>
+                </div>
+            </div>
+
+            <!-- Categorized Event Lists -->
+            <div class="flex flex-col gap-12 sm:gap-16 mt-8 sm:mt-12 w-full" id="events-container">
                 {
-                    events.map((event, index) => (
+                    [
+                        { title: "Upcoming Events", events: upcomingEvents },
+                        { title: "Concluded Events", events: concludedEvents }
+                    ].filter(cat => cat.events.length > 0).map(category => (
+                        <div class="event-category-section" data-category={category.title}>
+                            <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8 text-center">{category.title}</h2>
+                            <div class="flex flex-col gap-4 sm:gap-8">
+                                {
+                                    category.events.map((event, index) => (
                         <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col md:flex-row hover:shadow-md transition-shadow h-full md:h-auto">
                             <div
                                 class={`md:w-1/4 lg:w-1/4 flex items-center justify-center p-3 sm:p-6 md:p-8 text-white shrink-0 md:shrink ${index % 2 === 0 ? "bg-blue-600" : "bg-gray-800"}`}
@@ -144,9 +179,54 @@ const formatMonthName = (date: Date | string) => {
                                 )}
                             </div>
                         </div>
+                                    ))
+                                }
+                            </div>
+                        </div>
                     ))
                 }
             </div>
         </div>
     </div>
 </MainLayout>
+
+<style>
+    .active-tab {
+        background-color: white;
+        color: #2563eb;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const buttons = document.querySelectorAll('.event-filter-btn');
+        const sections = document.querySelectorAll('.event-category-section') as NodeListOf<HTMLElement>;
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active styling from all buttons
+                buttons.forEach(btn => {
+                    btn.classList.remove('active-tab');
+                    btn.classList.add('text-gray-600', 'hover:text-gray-900');
+                    btn.classList.remove('text-blue-600');
+                });
+                
+                // Add active styling to clicked button
+                button.classList.add('active-tab');
+                button.classList.remove('text-gray-600', 'hover:text-gray-900');
+
+                const filter = button.getAttribute('data-filter');
+
+                // Toggle sections based on filter
+                sections.forEach(section => {
+                    if (filter === 'All' || section.getAttribute('data-category') === filter) {
+                        section.style.display = 'block';
+                    } else {
+                        section.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+</script>
