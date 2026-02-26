@@ -42,4 +42,15 @@ const events = defineCollection({
     })
 });
 
-export const collections = { news, resources, events };
+const documents = defineCollection({
+    type: 'data',
+    schema: z.object({
+        title: z.string(),
+        description: z.string(),
+        category: z.string(),
+        date: z.coerce.date(),
+        file: z.string(),
+    })
+});
+
+export const collections = { news, resources, events, documents };

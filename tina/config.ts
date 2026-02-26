@@ -25,6 +25,11 @@ export default defineConfig({
                 label: "News",
                 path: "src/content/news",
                 format: "md",
+                defaultItem: () => {
+                    return {
+                        pubDate: new Date().toISOString(),
+                    }
+                },
                 ui: {
                     filename: {
                         readonly: true,
@@ -132,6 +137,11 @@ export default defineConfig({
                 label: "Events",
                 path: "src/content/events",
                 format: "md",
+                defaultItem: () => {
+                    return {
+                        date: new Date().toISOString(),
+                    }
+                },
                 ui: {
                     filename: {
                         readonly: true,
@@ -197,6 +207,51 @@ export default defineConfig({
                         name: "body",
                         label: "Event Details Body",
                         isBody: true,
+                    },
+                ]
+            },
+            {
+                name: "documents",
+                label: "Documents",
+                path: "src/content/documents",
+                format: "json",
+                defaultItem: () => {
+                    return {
+                        date: new Date().toISOString(),
+                    }
+                },
+                fields: [
+                    {
+                        type: "string",
+                        name: "title",
+                        label: "Title",
+                        isTitle: true,
+                        required: true,
+                    },
+                    {
+                        type: "string",
+                        name: "description",
+                        label: "Description/Subtitle",
+                        required: true,
+                    },
+                    {
+                        type: "string",
+                        name: "category",
+                        label: "Category",
+                        required: true,
+                    },
+
+                    {
+                        type: "datetime",
+                        name: "date",
+                        label: "Document Date",
+                        required: true,
+                    },
+                    {
+                        type: "image",
+                        name: "file",
+                        label: "Upload Document",
+                        required: true,
                     },
                 ]
             }
