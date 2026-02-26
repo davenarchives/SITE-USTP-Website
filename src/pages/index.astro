@@ -26,6 +26,62 @@ const recentNews = posts.slice(0, 4);
 const allResources = await getCollection("resources");
 const recentResources = allResources.slice(0, 4);
 
+// Fetch documents
+const allDocuments = await getCollection("documents");
+allDocuments.sort(
+    (a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf(),
+);
+const catColors: Record<string, { bar: string; badge: string; icon: string }> =
+    {
+        Procurement: {
+            bar: "bg-violet-500",
+            badge: "bg-violet-50 text-violet-700 border-violet-200",
+            icon: "text-violet-400",
+        },
+        Financial: {
+            bar: "bg-emerald-500",
+            badge: "bg-emerald-50 text-emerald-700 border-emerald-200",
+            icon: "text-emerald-400",
+        },
+        Minutes: {
+            bar: "bg-amber-500",
+            badge: "bg-amber-50 text-amber-700 border-amber-200",
+            icon: "text-amber-400",
+        },
+        Resolution: {
+            bar: "bg-rose-500",
+            badge: "bg-rose-50 text-rose-700 border-rose-200",
+            icon: "text-rose-400",
+        },
+        General: {
+            bar: "bg-sky-500",
+            badge: "bg-sky-50 text-sky-700 border-sky-200",
+            icon: "text-sky-400",
+        },
+    };
+const defaultColor = {
+    bar: "bg-blue-500",
+    badge: "bg-blue-50 text-blue-700 border-blue-200",
+    icon: "text-blue-400",
+};
+
+const recentDocuments = allDocuments.slice(0, 4).map((d) => {
+    const extMatch = d.data.file?.match(/\.([a-z0-9]+)(?:[\?#]|$)/i);
+    const typeExt = extMatch ? extMatch[1].toUpperCase() : "PDF";
+    const color = catColors[d.data.category ?? ""] ?? defaultColor;
+    const downloadUrl =
+        d.data.file?.includes("cloudinary.com") &&
+        d.data.file?.includes("/upload/")
+            ? d.data.file.replace("/upload/", "/upload/fl_attachment/")
+            : d.data.file;
+    const dateLabel = new Date(d.data.date).toLocaleString("default", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+    });
+    return { ...d.data, typeExt, color, downloadUrl, dateLabel };
+});
+
 const formatDateNumber = (date: Date | string) => {
     return new Date(date).getDate().toString();
 };
@@ -42,11 +98,11 @@ const formatMonthName = (date: Date | string) => {
     <section class="py-12 md:py-16 bg-[#fafafa]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div
-                class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 md:auto-rows-[180px]"
+                class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 md:auto-rows-[180px]"
             >
                 <!-- Who Are We (Span 2x2) -->
                 <div
-                    class="md:col-span-2 md:row-span-2 bg-white rounded-[2rem] p-6 sm:p-8 shadow-sm flex flex-col border border-gray-100 overflow-hidden"
+                    class="col-span-2 md:col-span-2 md:row-span-2 bg-white rounded-[2rem] p-6 sm:p-8 shadow-sm flex flex-col border border-gray-100 overflow-hidden"
                 >
                     <div
                         class="w-fit px-3 py-1.5 rounded-full bg-[#e8f0fe] text-blue-600 font-bold text-xs mb-4 sm:mb-6 flex items-center gap-2 shrink-0"
@@ -89,7 +145,7 @@ const formatMonthName = (date: Date | string) => {
 
                 <!-- SDG Commitment Card (Blue, Span 2x1) -->
                 <div
-                    class="md:col-span-2 md:row-span-1 bg-gradient-to-r from-blue-500 to-blue-700 rounded-[2rem] p-6 shadow-sm flex flex-col justify-center relative overflow-hidden"
+                    class="col-span-2 md:col-span-2 md:row-span-1 bg-gradient-to-r from-blue-500 to-blue-700 rounded-[2rem] p-6 shadow-sm flex flex-col justify-center relative overflow-hidden"
                 >
                     <div
                         class="flex flex-col sm:flex-row sm:items-center justify-between mb-3 md:mb-4 relative z-10 gap-3 px-2"
@@ -128,15 +184,15 @@ const formatMonthName = (date: Date | string) => {
 
                 <!-- Mission (Span 1x1, Yellow) -->
                 <div
-                    class="md:col-span-1 md:row-span-1 bg-[#fbbf24] rounded-[2rem] p-6 shadow-sm flex flex-col items-center justify-center text-center relative overflow-hidden group"
+                    class="col-span-1 md:col-span-1 md:row-span-1 bg-[#fbbf24] rounded-[2rem] p-4 sm:p-6 shadow-sm flex flex-col items-center justify-center text-center relative overflow-hidden group aspect-square md:aspect-auto"
                 >
                     <h3
-                        class="text-4xl sm:text-5xl font-black text-gray-900 mb-2 relative z-10"
+                        class="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-2 relative z-10"
                     >
                         Mission
                     </h3>
                     <p
-                        class="text-gray-800 text-[10px] font-bold uppercase tracking-widest relative z-10 flex border-t border-gray-900/10 pt-2"
+                        class="text-gray-800 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest relative z-10 flex border-t border-gray-900/10 pt-2"
                     >
                         Empower IT Students
                     </p>
@@ -144,15 +200,15 @@ const formatMonthName = (date: Date | string) => {
 
                 <!-- Vision (Span 1x1, Dark) -->
                 <div
-                    class="md:col-span-1 md:row-span-1 bg-[#0f172a] rounded-[2rem] p-6 shadow-sm flex flex-col items-center justify-center text-center relative overflow-hidden group"
+                    class="col-span-1 md:col-span-1 md:row-span-1 bg-[#0f172a] rounded-[2rem] p-4 sm:p-6 shadow-sm flex flex-col items-center justify-center text-center relative overflow-hidden group aspect-square md:aspect-auto"
                 >
                     <h3
-                        class="text-3xl sm:text-4xl font-black text-white mb-2 relative z-10"
+                        class="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-2 relative z-10"
                     >
                         Vision
                     </h3>
                     <p
-                        class="text-gray-400 text-[10px] font-bold uppercase tracking-widest relative z-10 flex border-t border-white/10 pt-2"
+                        class="text-gray-400 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest relative z-10 flex border-t border-white/10 pt-2"
                     >
                         Premier IT Leaders
                     </p>
@@ -320,7 +376,7 @@ const formatMonthName = (date: Date | string) => {
                 </div>
             </div>
 
-            <!-- Resources Row -->
+            <!-- Documents Row -->
             <div class="mt-16">
                 <div
                     class="flex flex-row justify-between items-center md:items-end mb-6 sm:mb-8"
@@ -328,28 +384,195 @@ const formatMonthName = (date: Date | string) => {
                     <h3
                         class="text-xl sm:text-2xl font-bold text-gray-900 border-b-2 border-blue-600 pb-1 sm:pb-2 inline-block mb-0"
                     >
-                        Resources
+                        Documents
                     </h3>
                     <a
-                        href="/resources"
+                        href="/documents"
                         class="text-sm sm:text-base text-blue-600 hover:text-blue-800 font-medium whitespace-nowrap"
-                        >View all resources &rarr;</a
+                        >View all documents &rarr;</a
                     >
                 </div>
 
                 {
-                    /* Horizontal scrollable container for the 'carousel' effect on smaller screens */
-                }
-                <div
-                    class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-8"
-                >
-                    {
-                        recentResources.map((resource) => (
-                            <div class="w-full">
-                                <div class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-3 sm:p-6 flex flex-col h-full">
-                                    <div class="flex items-center justify-between mb-4">
+                    recentDocuments.length === 0 ? (
+                        <div class="bg-white rounded-xl border border-gray-200 py-12 text-center text-gray-400">
+                            <svg
+                                class="w-12 h-12 mx-auto mb-3 opacity-40"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.5"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                />
+                            </svg>
+                            <p class="text-sm font-medium">
+                                No documents available yet.
+                            </p>
+                        </div>
+                    ) : (
+                        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-8">
+                            {recentDocuments.map((doc) => (
+                                <div class="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-lg transition-all duration-300 h-full">
+                                    {/* Colored top accent bar */}
+                                    <div
+                                        class={`h-1.5 w-full flex-shrink-0 ${doc.color.bar}`}
+                                    />
+
+                                    {/* Header: icon + file type badge */}
+                                    <div class="flex items-start justify-between px-4 sm:px-5 pt-4 sm:pt-5 pb-2 flex-shrink-0">
+                                        <div
+                                            class={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center ${doc.color.badge}`}
+                                        >
+                                            <svg
+                                                class={`w-5 h-5 sm:w-6 sm:h-6 ${doc.color.icon}`}
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="1.5"
+                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                />
+                                            </svg>
+                                        </div>
                                         <span
-                                            class={`px-2 py-1 text-xs font-semibold rounded-full 
+                                            class={`text-[10px] font-black tracking-widest px-2 py-0.5 rounded border ${doc.color.badge}`}
+                                        >
+                                            {doc.typeExt}
+                                        </span>
+                                    </div>
+
+                                    {/* Card body */}
+                                    <div class="px-4 sm:px-5 pb-4 flex flex-col flex-1">
+                                        {doc.category && (
+                                            <span
+                                                class={`w-fit text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border mb-2 ${doc.color.badge}`}
+                                            >
+                                                {doc.category}
+                                            </span>
+                                        )}
+
+                                        <h4 class="text-sm sm:text-base font-bold text-gray-900 line-clamp-2 leading-snug mb-1 group-hover:text-blue-600 transition-colors">
+                                            {doc.title}
+                                        </h4>
+
+                                        {doc.description && (
+                                            <p class="text-xs text-gray-500 line-clamp-2 mb-3 flex-1">
+                                                {doc.description}
+                                            </p>
+                                        )}
+
+                                        <p class="mt-auto text-[11px] text-gray-400 flex items-center gap-1 mb-3">
+                                            <svg
+                                                class="w-3 h-3 flex-shrink-0"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                />
+                                            </svg>
+                                            {doc.dateLabel}
+                                        </p>
+
+                                        {/* Action buttons */}
+                                        <div class="flex gap-2">
+                                            <button
+                                                data-preview-url={doc.file}
+                                                class="home-doc-preview-btn flex-shrink-0 inline-flex items-center justify-center gap-1 px-3 py-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-600 hover:text-blue-600 text-xs font-semibold transition-colors duration-200"
+                                                title="Preview"
+                                            >
+                                                <svg
+                                                    class="w-3.5 h-3.5"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                                    />
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                    />
+                                                </svg>
+                                                <span class="hidden sm:inline">
+                                                    Preview
+                                                </span>
+                                            </button>
+                                            <a
+                                                href={doc.downloadUrl}
+                                                download
+                                                class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-gray-900 hover:bg-blue-600 text-white text-xs font-bold transition-colors duration-200 shadow-sm"
+                                            >
+                                                <svg
+                                                    class="w-3.5 h-3.5"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                                    />
+                                                </svg>
+                                                Download
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )
+                }
+
+                <!-- Resources Row -->
+                <div class="mt-16">
+                    <div
+                        class="flex flex-row justify-between items-center md:items-end mb-6 sm:mb-8"
+                    >
+                        <h3
+                            class="text-xl sm:text-2xl font-bold text-gray-900 border-b-2 border-blue-600 pb-1 sm:pb-2 inline-block mb-0"
+                        >
+                            Resources
+                        </h3>
+                        <a
+                            href="/resources"
+                            class="text-sm sm:text-base text-blue-600 hover:text-blue-800 font-medium whitespace-nowrap"
+                            >View all resources &rarr;</a
+                        >
+                    </div>
+
+                    {
+                        /* Horizontal scrollable container for the 'carousel' effect on smaller screens */
+                    }
+                    <div
+                        class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-8"
+                    >
+                        {
+                            recentResources.map((resource) => (
+                                <div class="w-full">
+                                    <div class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-3 sm:p-6 flex flex-col h-full">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <span
+                                                class={`px-2 py-1 text-xs font-semibold rounded-full 
                                             ${
                                                 resource.data.category ===
                                                 "Academic"
@@ -359,49 +582,186 @@ const formatMonthName = (date: Date | string) => {
                                                       ? "bg-green-100 text-green-800"
                                                       : "bg-gray-100 text-gray-800"
                                             }`}
+                                            >
+                                                {resource.data.category}
+                                            </span>
+                                        </div>
+
+                                        <h3
+                                            class="text-sm sm:text-lg font-medium text-gray-900 mb-1 sm:mb-2 line-clamp-2 md:truncate"
+                                            title={resource.data.title}
                                         >
-                                            {resource.data.category}
-                                        </span>
+                                            {resource.data.title}
+                                        </h3>
+
+                                        <p class="line-clamp-3 text-xs sm:text-sm text-gray-500 mb-2 sm:mb-4 flex-grow-0">
+                                            {resource.data.description}
+                                        </p>
+
+                                        <a
+                                            href={resource.data.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="mt-auto inline-flex items-center justify-center px-1 sm:px-4 py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors w-full"
+                                        >
+                                            <span class="sm:hidden">
+                                                Download
+                                            </span>
+                                            <span class="hidden sm:inline">
+                                                Download / View
+                                            </span>
+                                        </a>
                                     </div>
-
-                                    <h3
-                                        class="text-sm sm:text-lg font-medium text-gray-900 mb-1 sm:mb-2 line-clamp-2 md:truncate"
-                                        title={resource.data.title}
-                                    >
-                                        {resource.data.title}
-                                    </h3>
-
-                                    <p class="line-clamp-3 text-xs sm:text-sm text-gray-500 mb-2 sm:mb-4 flex-grow-0">
-                                        {resource.data.description}
-                                    </p>
-
-                                    <a
-                                        href={resource.data.link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        class="mt-auto inline-flex items-center justify-center px-1 sm:px-4 py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors w-full"
-                                    >
-                                        <span class="sm:hidden">Download</span>
-                                        <span class="hidden sm:inline">
-                                            Download / View
-                                        </span>
-                                    </a>
                                 </div>
-                            </div>
-                        ))
-                    }
+                            ))
+                        }
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <style>
-        .hide-scrollbars::-webkit-scrollbar {
-            display: none;
-        }
-        .hide-scrollbars {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-    </style>
+        <style>
+            .hide-scrollbars::-webkit-scrollbar {
+                display: none;
+            }
+            .hide-scrollbars {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        </style>
+    </section>
+    <!-- Document Preview Modal (homepage) -->
+    <div id="home-doc-modal" class="fixed inset-0 z-[200] hidden">
+        <!-- Backdrop -->
+        <div
+            id="home-doc-modal-backdrop"
+            class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
+        >
+        </div>
+        <!-- Modal panel -->
+        <div
+            class="absolute inset-0 flex items-center justify-center p-4 sm:p-8 md:p-12"
+        >
+            <div
+                class="bg-white rounded-2xl shadow-2xl w-full h-full max-w-5xl flex flex-col overflow-hidden relative z-10"
+            >
+                <!-- Header -->
+                <div
+                    class="px-5 py-4 flex items-center justify-between border-b border-gray-100 flex-shrink-0"
+                >
+                    <h3 class="text-base font-bold text-gray-900">
+                        Document Preview
+                    </h3>
+                    <div class="flex items-center gap-2">
+                        <a
+                            id="home-doc-modal-newtab"
+                            href="#"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-xs font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors"
+                        >
+                            Open in new tab
+                        </a>
+                        <button
+                            id="home-doc-modal-close"
+                            class="text-gray-400 hover:text-gray-600 p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                        >
+                            <span class="sr-only">Close</span>
+                            <svg
+                                class="w-5 h-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <!-- Iframe -->
+                <div class="flex-1 relative bg-gray-100">
+                    <div
+                        id="home-doc-modal-loader"
+                        class="absolute inset-0 flex items-center justify-center bg-gray-100/80 z-10"
+                    >
+                        <svg
+                            class="animate-spin h-8 w-8 text-blue-600"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <circle
+                                class="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                stroke-width="4"></circle>
+                            <path
+                                class="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                        </svg>
+                    </div>
+                    <iframe
+                        id="home-doc-modal-iframe"
+                        class="w-full h-full border-0"
+                        title="Document Preview"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
 </MainLayout>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const modal = document.getElementById("home-doc-modal");
+        const backdrop = document.getElementById("home-doc-modal-backdrop");
+        const closeBtn = document.getElementById("home-doc-modal-close");
+        const iframe = document.getElementById(
+            "home-doc-modal-iframe",
+        ) as HTMLIFrameElement;
+        const newTab = document.getElementById(
+            "home-doc-modal-newtab",
+        ) as HTMLAnchorElement;
+        const loader = document.getElementById("home-doc-modal-loader");
+
+        const openModal = (url: string) => {
+            if (!modal || !iframe || !newTab || !loader) return;
+            iframe.src = url;
+            newTab.href = url;
+            loader.style.display = "flex";
+            modal.classList.remove("hidden");
+            document.body.style.overflow = "hidden";
+            iframe.onload = () => {
+                loader.style.display = "none";
+            };
+        };
+
+        const closeModal = () => {
+            if (!modal || !iframe) return;
+            modal.classList.add("hidden");
+            document.body.style.overflow = "";
+            iframe.src = "";
+        };
+
+        document.querySelectorAll(".home-doc-preview-btn").forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const url = btn.getAttribute("data-preview-url");
+                if (url) openModal(url);
+            });
+        });
+
+        closeBtn?.addEventListener("click", closeModal);
+        backdrop?.addEventListener("click", closeModal);
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && !modal?.classList.contains("hidden"))
+                closeModal();
+        });
+    });
+</script>
