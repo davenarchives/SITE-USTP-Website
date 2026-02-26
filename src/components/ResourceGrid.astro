@@ -8,13 +8,17 @@ interface Props {
 const { resources } = Astro.props;
 ---
 
-<div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
-  {
-    resources.map((resource) => (
-      <div class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-3 sm:p-6 flex flex-col h-full">
-        <div class="flex items-center justify-between mb-4">
-          <span
-            class={`px-2 py-1 text-xs font-semibold rounded-full 
+<div class="pagination-wrapper w-full mt-8">
+  <div
+    class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 paginated-container"
+    data-per-page="6"
+  >
+    {
+      resources.map((resource) => (
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-3 sm:p-6 flex flex-col h-full paginated-item">
+          <div class="flex items-center justify-between mb-4">
+            <span
+              class={`px-2 py-1 text-xs font-semibold rounded-full 
           ${
             resource.data.category === "Academic"
               ? "bg-blue-100 text-blue-800"
@@ -22,32 +26,184 @@ const { resources } = Astro.props;
                 ? "bg-green-100 text-green-800"
                 : "bg-gray-100 text-gray-800"
           }`}
+            >
+              {resource.data.category}
+            </span>
+          </div>
+
+          <h3
+            class="text-sm sm:text-lg font-medium text-gray-900 mb-1 sm:mb-2 line-clamp-2 md:truncate"
+            title={resource.data.title}
           >
-            {resource.data.category}
-          </span>
+            {resource.data.title}
+          </h3>
+
+          <p class="hidden sm:block text-sm text-gray-500 mb-4 flex-grow line-clamp-3">
+            {resource.data.description}
+          </p>
+
+          <a
+            href={resource.data.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mt-auto inline-flex items-center justify-center px-1 sm:px-4 py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors w-full"
+          >
+            <span class="sm:hidden">Download</span>
+            <span class="hidden sm:inline">Download / View</span>
+          </a>
         </div>
+      ))
+    }
+  </div>
 
-        <h3
-          class="text-sm sm:text-lg font-medium text-gray-900 mb-1 sm:mb-2 line-clamp-2 md:truncate"
-          title={resource.data.title}
+  <div class="mt-8 flex justify-center pagination-controls hidden w-full">
+    <nav
+      class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+      aria-label="Pagination"
+    >
+      <button
+        class="pagination-prev relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <span class="sr-only">Previous</span>
+        <svg
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          ><path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"></path></svg
         >
-          {resource.data.title}
-        </h3>
-
-        <p class="hidden sm:block text-sm text-gray-500 mb-4 flex-grow line-clamp-3">
-          {resource.data.description}
-        </p>
-
-        <a
-          href={resource.data.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="mt-auto inline-flex items-center justify-center px-1 sm:px-4 py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors w-full"
+      </button>
+      <div class="pagination-numbers hidden md:flex"></div>
+      <span
+        class="pagination-mobile-text md:hidden relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700"
+      >
+        Page 1
+      </span>
+      <button
+        class="pagination-next relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <span class="sr-only">Next</span>
+        <svg
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          ><path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"></path></svg
         >
-          <span class="sm:hidden">Download</span>
-          <span class="hidden sm:inline">Download / View</span>
-        </a>
-      </div>
-    ))
-  }
+      </button>
+    </nav>
+  </div>
 </div>
+
+<script>
+  function initPagination() {
+    const wrappers = document.querySelectorAll(".pagination-wrapper");
+    wrappers.forEach((wrapper) => {
+      const container = wrapper.querySelector(".paginated-container");
+      if (!container) return;
+      const items = Array.from(
+        container.querySelectorAll(".paginated-item"),
+      ) as HTMLElement[];
+      const isMobile = window.innerWidth < 1024;
+      const perPage = isMobile ? 6 : 9;
+      const totalPages = Math.ceil(items.length / perPage);
+
+      const controls = wrapper.querySelector(
+        ".pagination-controls",
+      ) as HTMLElement;
+      if (totalPages <= 1) {
+        if (controls) controls.style.display = "none";
+        return;
+      }
+      if (controls) controls.classList.remove("hidden");
+
+      let currentPage = 1;
+      const prevBtn = controls.querySelector(
+        ".pagination-prev",
+      ) as HTMLButtonElement;
+      const nextBtn = controls.querySelector(
+        ".pagination-next",
+      ) as HTMLButtonElement;
+      const numbersContainer = controls.querySelector(".pagination-numbers");
+      const mobileText = controls.querySelector(".pagination-mobile-text");
+
+      const render = () => {
+        items.forEach((item, index) => {
+          const start = (currentPage - 1) * perPage;
+          const end = start + perPage;
+          if (index >= start && index < end) {
+            item.style.display = "";
+          } else {
+            item.style.display = "none";
+          }
+        });
+
+        if (prevBtn) prevBtn.disabled = currentPage === 1;
+        if (nextBtn) nextBtn.disabled = currentPage === totalPages;
+
+        if (mobileText) {
+          mobileText.textContent = `Page ${currentPage} of ${totalPages}`;
+        }
+
+        if (numbersContainer) {
+          numbersContainer.innerHTML = "";
+          for (let i = 1; i <= totalPages; i++) {
+            const btn = document.createElement("button");
+            btn.className = `relative inline-flex items-center px-4 py-2 border text-sm font-medium transition-colors ${
+              i === currentPage
+                ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
+                : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
+            }`;
+            btn.textContent = i.toString();
+            btn.addEventListener("click", () => {
+              currentPage = i;
+              render();
+              window.scrollTo({
+                top: (wrapper as HTMLElement).offsetTop - 100,
+                behavior: "smooth",
+              });
+            });
+            numbersContainer.appendChild(btn);
+          }
+        }
+      };
+
+      if (prevBtn)
+        prevBtn.addEventListener("click", () => {
+          if (currentPage > 1) {
+            currentPage--;
+            render();
+            window.scrollTo({
+              top: (wrapper as HTMLElement).offsetTop - 100,
+              behavior: "smooth",
+            });
+          }
+        });
+      if (nextBtn)
+        nextBtn.addEventListener("click", () => {
+          if (currentPage < totalPages) {
+            currentPage++;
+            render();
+            window.scrollTo({
+              top: (wrapper as HTMLElement).offsetTop - 100,
+              behavior: "smooth",
+            });
+          }
+        });
+
+      render();
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    initPagination();
+  });
+</script>

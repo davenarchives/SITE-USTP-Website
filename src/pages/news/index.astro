@@ -10,74 +10,234 @@ const posts = (await getCollection("news")).sort(
 ---
 
 <MainLayout title="News | SITE">
-    <div class="bg-white py-16">
+    <div class="bg-surface-base py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
-                <h1 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                <h1 class="text-3xl font-extrabold text-text-main sm:text-4xl">
                     SITE News
                 </h1>
-                <p class="mt-4 text-xl text-gray-500">
+                <p class="mt-4 text-xl text-text-muted">
                     Latest updates, announcements, and stories from the SITE
                     community.
                 </p>
             </div>
 
-            <div
-                class="grid grid-cols-2 gap-3 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-5 lg:gap-y-12"
-            >
-                {
-                    posts.map((post) => (
-                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col hover:shadow-md transition-shadow h-full">
-                            <div class="h-24 sm:h-48 overflow-hidden bg-gray-100 flex-shrink-0">
-                                {post.data.heroImage ? (
-                                    <img
-                                        src={post.data.heroImage}
-                                        alt={post.data.title}
-                                        class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                                    />
-                                ) : (
-                                    <div class="w-full h-full flex items-center justify-center text-gray-400">
-                                        <svg
-                                            class="w-12 h-12"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
+            <div class="pagination-wrapper">
+                <div
+                    class="grid grid-cols-2 gap-3 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-5 lg:gap-y-12 paginated-container"
+                    data-per-page="6"
+                >
+                    {
+                        posts.map((post) => (
+                            <div class="bg-surface-card rounded-lg shadow-sm border border-border-base overflow-hidden flex flex-col hover:shadow-md transition-shadow h-full paginated-item">
+                                <div class="h-24 sm:h-48 overflow-hidden bg-surface-muted flex-shrink-0">
+                                    {post.data.heroImage ? (
+                                        <img
+                                            src={post.data.heroImage}
+                                            alt={post.data.title}
+                                            class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                                        />
+                                    ) : (
+                                        <div class="w-full h-full flex items-center justify-center text-gray-400">
+                                            <svg
+                                                class="w-12 h-12"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="1.5"
+                                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                                                />
+                                            </svg>
+                                        </div>
+                                    )}
+                                </div>
+                                <div class="p-3 sm:p-5 flex flex-col flex-1">
+                                    <p class="text-xs font-medium text-primary mb-1">
+                                        {post.data.tags && post.data.tags[0]
+                                            ? post.data.tags[0]
+                                            : "News"}
+                                    </p>
+                                    <h4 class="text-sm sm:text-lg font-bold text-text-main mb-1 sm:mb-2 line-clamp-2 md:leading-tight">
+                                        {post.data.title}
+                                    </h4>
+                                    <p class="line-clamp-3 text-xs sm:text-sm text-text-muted mb-2 sm:mb-4 flex-grow-0">
+                                        {post.data.description}
+                                    </p>
+                                    <div class="mt-auto">
+                                        <a
+                                            href={`/news/${post.id}/`}
+                                            class="text-xs sm:text-sm text-primary font-semibold hover:underline"
                                         >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="1.5"
-                                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                                            />
-                                        </svg>
+                                            Read article &rarr;
+                                        </a>
                                     </div>
-                                )}
-                            </div>
-                            <div class="p-3 sm:p-5 flex flex-col flex-1">
-                                <p class="text-xs font-medium text-blue-600 mb-1">
-                                    {post.data.tags && post.data.tags[0]
-                                        ? post.data.tags[0]
-                                        : "News"}
-                                </p>
-                                <h4 class="text-sm sm:text-lg font-bold text-gray-900 mb-1 sm:mb-2 line-clamp-2 md:leading-tight">
-                                    {post.data.title}
-                                </h4>
-                                <p class="line-clamp-3 text-xs sm:text-sm text-gray-600 mb-2 sm:mb-4 flex-grow-0">
-                                    {post.data.description}
-                                </p>
-                                <div class="mt-auto">
-                                    <a
-                                        href={`/news/${post.id}/`}
-                                        class="text-xs sm:text-sm text-blue-600 font-semibold hover:underline"
-                                    >
-                                        Read article &rarr;
-                                    </a>
                                 </div>
                             </div>
-                        </div>
-                    ))
-                }
+                        ))
+                    }
+                </div>
+
+                <div
+                    class="mt-8 flex justify-center pagination-controls hidden w-full"
+                >
+                    <nav
+                        class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                        aria-label="Pagination"
+                    >
+                        <button
+                            class="pagination-prev relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <span class="sr-only">Previous</span>
+                            <svg
+                                class="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                ><path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M15 19l-7-7 7-7"></path></svg
+                            >
+                        </button>
+                        <div class="pagination-numbers hidden md:flex"></div>
+                        <span
+                            class="pagination-mobile-text md:hidden relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700"
+                        >
+                            Page 1
+                        </span>
+                        <button
+                            class="pagination-next relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <span class="sr-only">Next</span>
+                            <svg
+                                class="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                ><path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M9 5l7 7-7 7"></path></svg
+                            >
+                        </button>
+                    </nav>
+                </div>
             </div>
         </div>
     </div>
 </MainLayout>
+
+<script>
+    function initPagination() {
+        const wrappers = document.querySelectorAll(".pagination-wrapper");
+        wrappers.forEach((wrapper) => {
+            const container = wrapper.querySelector(".paginated-container");
+            if (!container) return;
+            const items = Array.from(
+                container.querySelectorAll(".paginated-item"),
+            ) as HTMLElement[];
+            const isMobile = window.innerWidth < 1024;
+            const perPage = isMobile ? 6 : 9;
+            const totalPages = Math.ceil(items.length / perPage);
+
+            const controls = wrapper.querySelector(
+                ".pagination-controls",
+            ) as HTMLElement;
+            if (totalPages <= 1) {
+                if (controls) controls.style.display = "none";
+                return;
+            }
+            if (controls) controls.classList.remove("hidden");
+
+            let currentPage = 1;
+            const prevBtn = controls.querySelector(
+                ".pagination-prev",
+            ) as HTMLButtonElement;
+            const nextBtn = controls.querySelector(
+                ".pagination-next",
+            ) as HTMLButtonElement;
+            const numbersContainer = controls.querySelector(
+                ".pagination-numbers",
+            );
+            const mobileText = controls.querySelector(
+                ".pagination-mobile-text",
+            );
+
+            const render = () => {
+                items.forEach((item, index) => {
+                    const start = (currentPage - 1) * perPage;
+                    const end = start + perPage;
+                    if (index >= start && index < end) {
+                        item.style.display = "";
+                    } else {
+                        item.style.display = "none";
+                    }
+                });
+
+                if (prevBtn) prevBtn.disabled = currentPage === 1;
+                if (nextBtn) nextBtn.disabled = currentPage === totalPages;
+
+                if (mobileText) {
+                    mobileText.textContent = `Page ${currentPage} of ${totalPages}`;
+                }
+
+                if (numbersContainer) {
+                    numbersContainer.innerHTML = "";
+                    for (let i = 1; i <= totalPages; i++) {
+                        const btn = document.createElement("button");
+                        btn.className = `relative inline-flex items-center px-4 py-2 border text-sm font-medium transition-colors ${
+                            i === currentPage
+                                ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
+                                : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
+                        }`;
+                        btn.textContent = i.toString();
+                        btn.addEventListener("click", () => {
+                            currentPage = i;
+                            render();
+                            window.scrollTo({
+                                top: (wrapper as HTMLElement).offsetTop - 100,
+                                behavior: "smooth",
+                            });
+                        });
+                        numbersContainer.appendChild(btn);
+                    }
+                }
+            };
+
+            if (prevBtn)
+                prevBtn.addEventListener("click", () => {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        render();
+                        window.scrollTo({
+                            top: (wrapper as HTMLElement).offsetTop - 100,
+                            behavior: "smooth",
+                        });
+                    }
+                });
+            if (nextBtn)
+                nextBtn.addEventListener("click", () => {
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        render();
+                        window.scrollTo({
+                            top: (wrapper as HTMLElement).offsetTop - 100,
+                            behavior: "smooth",
+                        });
+                    }
+                });
+
+            render();
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        initPagination();
+    });
+</script>
