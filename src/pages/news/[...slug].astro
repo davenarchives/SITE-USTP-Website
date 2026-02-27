@@ -38,16 +38,10 @@ const { Content } = await render(post);
                 <a href="/news" class="hover:text-blue-600 transition-colors"
                     >News</a
                 >
-                {
-                    post.data.tags && post.data.tags.length > 0 && (
-                        <>
-                            <span>&rsaquo;</span>
-                            <span class="text-blue-600">
-                                {post.data.tags[0]}
-                            </span>
-                        </>
-                    )
-                }
+                <span>&rsaquo;</span>
+                <span class="text-gray-900 truncate" title={post.data.title}>
+                    {post.data.title}
+                </span>
             </div>
 
             <!-- Headline -->
