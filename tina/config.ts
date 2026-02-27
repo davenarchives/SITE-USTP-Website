@@ -97,7 +97,20 @@ export default defineConfig({
                 name: "resources",
                 label: "Resources",
                 path: "src/content/resources",
-                format: "json",
+                format: "md",
+                defaultItem: () => {
+                    return {
+                        date: new Date().toISOString(),
+                    }
+                },
+                ui: {
+                    filename: {
+                        readonly: true,
+                        slugify: (values) => {
+                            return `${values?.title?.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '') || 'new-resource'}`;
+                        },
+                    },
+                },
                 fields: [
                     {
                         type: "string",
@@ -120,16 +133,42 @@ export default defineConfig({
                         required: true,
                     },
                     {
-                        type: "string",
-                        name: "link",
-                        label: "Link",
-                        required: true,
+                        type: "image",
+                        name: "heroImage",
+                        label: "Hero Image",
                     },
                     {
-                        type: "string",
-                        name: "icon",
-                        label: "Icon",
+                        type: "datetime",
+                        name: "date",
+                        label: "Date",
                     },
+                    {
+                        type: "object",
+                        list: true,
+                        name: "embeds",
+                        label: "Embeds (Sections)",
+                        ui: {
+                            itemProps: (item) => {
+                                return { label: item?.title || 'New Embed' }
+                            }
+                        },
+                        fields: [
+                            {
+                                type: "string",
+                                name: "title",
+                                label: "Title",
+                                required: true,
+                            },
+                            {
+                                type: "string",
+                                name: "description",
+                                label: "Description",
+                                ui: {
+                                    component: "textarea"
+                                }
+                            }
+                        ]
+                    }
                 ]
             },
             {

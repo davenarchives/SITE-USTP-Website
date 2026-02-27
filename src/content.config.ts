@@ -18,13 +18,17 @@ const news = defineCollection({
 
 
 const resources = defineCollection({
-    type: 'data',
+    type: 'content',
     schema: z.object({
         title: z.string(),
         category: z.enum(['Academic', 'Syllabus', 'Guide', 'Software']),
         description: z.string(),
-        link: z.string(),
-        icon: z.string().optional(), // Icon name or URL
+        heroImage: z.string().optional(),
+        date: z.coerce.date().optional(),
+        embeds: z.array(z.object({
+            title: z.string().optional(),
+            description: z.string().optional(),
+        })).optional(),
     })
 });
 
