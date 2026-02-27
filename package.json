@@ -21,6 +21,7 @@
     "cloudinary": "^2.9.0",
     "firebase": "^12.8.0",
     "fs-extra": "^11.3.3",
+    "marked": "^17.0.3",
     "next-tinacms-cloudinary": "^22.0.1",
     "react": "^19.2.4",
     "react-dnd": "^16.0.1",
